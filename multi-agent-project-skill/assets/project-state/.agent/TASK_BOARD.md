@@ -1,10 +1,10 @@
-# Task Board
+# 任务看板
 
-| Task ID | Title | Owner agent | Status | Branch/worktree | Allowed scope | Dependencies | Updated at |
+| Task ID | 标题 | Owner agent | Status | Branch/worktree | Allowed scope | Dependencies | 更新时间 |
 |---|---|---|---|---|---|---|---|
-| TASK-001 | Initialize multi-agent project state | unassigned | BACKLOG | - | `.agent/` | - | - |
+| TASK-001 | 初始化多 Agent 项目状态 | unassigned | BACKLOG | - | `.agent/` | - | - |
 
-## Task details template
+## 任务详情模板
 
 ```text
 Task ID:

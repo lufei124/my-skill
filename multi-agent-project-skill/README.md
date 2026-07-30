@@ -1,21 +1,21 @@
 # Multi-Agent Project Coordination Skill
 
-A portable skill for projects that may be edited by several AI agents concurrently or handed off at any moment.
+一个可移植的 skill，面向那些可能被多个 AI Agent 并行编辑、或在任意时刻被交接的项目。
 
-## Contents
+## 内容
 
-- `SKILL.md`: agent behavior and coordination protocol
-- `scripts/init_workspace.py`: initializes `.agent/` state without overwriting existing files
-- `references/WORKFLOW.md`: compact operating workflow
-- `references/EXAMPLES.md`: parallel and takeover examples
+- `SKILL.md`：Agent 行为与协作协议守则
+- `scripts/init_workspace.py`：初始化 `.agent/` 状态，且默认不会覆盖已有文件
+- `references/WORKFLOW.md`：精简版操作流程
+- `references/EXAMPLES.md`：并行开发与接管示例
 
-## Initialize a project
+## 初始化一个项目
 
 ```bash
 python /path/to/skill/scripts/init_workspace.py /path/to/project --add-agents-md
 ```
 
-This creates:
+该命令会创建：
 
 ```text
 .agent/
@@ -27,4 +27,4 @@ This creates:
 └── handoffs/
 ```
 
-Existing files are preserved by default. Use `--force` only when replacement is intentional.
+已有文件默认会被保留。仅在你确实打算替换内容时，才使用 `--force`。

@@ -1,28 +1,28 @@
 ---
 name: multi-agent-project-coordination
-description: Use this skill when a software or product project may be edited by multiple AI agents concurrently, may be handed off at any point, or needs durable task state, file ownership, Git isolation, review, integration, and recovery that do not depend on chat history. Trigger for multi-agent collaboration, agent takeover, parallel development, task handoff, shared repositories, worktrees, file conflicts, interrupted work, or cross-agent review.
+description: 当软件或产品项目可能被多个 AI Agent 并发编辑、可能在任意时刻被交接、或需要不依赖聊天记录即可持久化的任务状态、文件归属、Git 隔离、审查、集成与恢复时使用本 skill。适用于多 Agent 协作、Agent 接管、并行开发、任务交接、共享仓库、worktree 使用、文件冲突、工作中断或跨 Agent 审查等场景。
 ---
 
-# Multi-Agent Project Coordination
+# 多 Agent 项目协作
 
-## Goal
+## 目标
 
-Make a project safe for multiple AI agents to work on concurrently or take over at any time. The repository is the durable source of truth; chat context is temporary.
+让一个项目可以安全地被多个 AI Agent 并行编辑，或在任意时刻由另一个 Agent 接手。仓库是持久的事实来源；聊天上下文是临时的。
 
-## Non-negotiable rules
+## 不可妥协的规则
 
-1. Read project state before editing.
-2. Claim a task before changing files.
-3. Use one branch or Git worktree per active task when agents work in parallel.
-4. Declare the intended file scope before editing.
-5. Do not edit files actively owned by another task unless performing an explicit integration or takeover.
-6. Keep changes minimal and limited to the claimed task.
-7. Never erase, reset, reformat, or overwrite another agent's unmerged work.
-8. Never claim tests passed unless they were actually executed.
-9. Do not commit or push unless the user or coordinating agent explicitly requests it.
-10. Update durable state whenever work pauses, changes hands, becomes blocked, enters review, or finishes.
+1. 编辑前先读取项目状态。
+2. 改动文件前先认领任务。
+3. 多个 Agent 并行时，每个进行中的任务使用一个独立分支或 Git worktree。
+4. 编辑前声明预期的文件范围。
+5. 不得编辑被其他任务实时持有的文件，除非是在执行显式的集成或接管。
+6. 改动保持最小，且仅限于已认领的任务范围内。
+7. 永不擦除、重置、重新格式化或覆盖其他 Agent 未合并的成果。
+8. 未真正执行过的测试，绝不得声称其已通过。
+9. 除非用户或协调 Agent 明确要求，否则不得提交或推送。
+10. 工作一旦暂停、易主、受阻、进入审查或完成，都要更新持久状态。
 
-Never run destructive commands such as:
+不得运行此类破坏性命令：
 
 ```bash
 git reset --hard
@@ -30,9 +30,9 @@ git clean -fd
 git push --force
 ```
 
-## Required project state
+## 必需的项目状态
 
-Use the `.agent/` directory in the project root:
+在项目根目录使用 `.agent/` 目录：
 
 ```text
 .agent/
@@ -44,41 +44,41 @@ Use the `.agent/` directory in the project root:
 └── handoffs/
 ```
 
-If it does not exist, run:
+若尚不存在，运行：
 
 ```bash
-python <skill-directory>/scripts/init_workspace.py <project-root>
+python <skill-path>/scripts/init_workspace.py <project-root>
 ```
 
-The initializer must not overwrite existing files unless explicitly requested.
+初始化器不得覆盖已有文件，除非被明确要求。
 
-## Operating modes
+## 运行模式
 
-Determine the current mode and follow the corresponding procedure:
+判断当前所处模式，并遵循对应流程：
 
-- **Initialize**: create missing state files and inspect the repository.
-- **Claim**: select or create a task, register ownership, branch, scope, dependencies, and acceptance criteria.
-- **Execute**: work only inside the claimed scope and keep a short recoverable checkpoint.
-- **Checkpoint**: record current progress before context becomes long or uncertain.
-- **Handoff**: make incomplete or completed work independently understandable to another agent.
-- **Takeover**: verify another agent's handoff against Git and tests before continuing.
-- **Review**: inspect adversarially without assuming the implementation is correct.
-- **Integrate**: merge parallel work in dependency order and resolve intent, not just text conflicts.
+- **初始化（Initialize）**：创建缺失的状态文件并检视仓库。
+- **认领（Claim）**：选定或创建一个任务，登记归属、分支、范围、依赖与验收标准。
+- **执行（Execute）**：仅在已认领范围内工作，并维护一个可恢复的简短检查点。
+- **检查点（Checkpoint）**：在上下文变长或变得不确定之前，记录当前进度。
+- **交接（Handoff）**：让未完成或已完成的工作能被另一个 Agent 独立理解。
+- **接管（Takeover）**：继续之前，先依据 Git 与测试校验另一个 Agent 的交接说明。
+- **审查（Review）**：以对抗心态检查，不默认实现是正确的。
+- **集成（Integrate）**：按依赖顺序合并并行工作，解决意图冲突，而不只是文本冲突。
 
-## Start-of-work procedure
+## 开工流程
 
-Before editing:
+编辑之前：
 
-1. Read, when present:
+1. 如存在则读取：
    - `AGENTS.md`
    - `PROJECT_CONTEXT.md`
    - `.agent/PROJECT_STATE.md`
    - `.agent/TASK_BOARD.md`
    - `.agent/FILE_LOCKS.md`
    - `.agent/TASK_HANDOFF.md`
-   - relevant `.agent/decisions/`
-   - relevant `.agent/handoffs/`
-2. Run:
+   - 相关的 `.agent/decisions/`
+   - 相关的 `.agent/handoffs/`
+2. 运行：
 
 ```bash
 git status --short
@@ -87,7 +87,7 @@ git diff --stat
 git log -10 --oneline
 ```
 
-3. Establish and state:
+3. 确立并陈述：
 
 ```text
 Agent identity:
@@ -100,11 +100,11 @@ Planned file scope:
 Acceptance criteria:
 ```
 
-4. If unexplained uncommitted changes exist, preserve them. Do not clean or overwrite them.
+4. 若存在无法解释的未提交改动，予以保留。不得清理或覆盖。
 
-## Task claim protocol
+## 任务认领协议
 
-Each task entry in `.agent/TASK_BOARD.md` must contain:
+`.agent/TASK_BOARD.md` 中每个任务条目须包含：
 
 ```text
 Task ID:
@@ -121,7 +121,7 @@ Started at:
 Updated at:
 ```
 
-Valid statuses:
+合法状态：
 
 ```text
 BACKLOG
@@ -135,21 +135,21 @@ DONE
 ABANDONED
 ```
 
-Before modifying files:
+修改文件之前：
 
-- Claim an unowned task or explicitly take over an abandoned/stale task.
-- Record a unique agent identity, such as `codex-20260730-01`.
-- Record the exact files or directories expected to change.
-- Prefer separate tasks when work can be split cleanly.
+- 认领一个无人持有的任务，或显式接管一个已废弃/陈旧的任务。
+- 记录唯一的 Agent 身份标识，例如 `codex-20260730-01`。
+- 记录预期会改动的确切文件或目录。
+- 当工作能干净拆分时，优先拆成独立任务。
 
-## Parallel work protocol
+## 并行工作协议
 
-When multiple agents work simultaneously:
+多个 Agent 同时工作时：
 
-1. Use separate branches or worktrees. File locks do not replace Git isolation.
-2. Prefer non-overlapping files and modules.
-3. Record planned ownership in `.agent/FILE_LOCKS.md` before editing.
-4. A lock must include:
+1. 使用独立分支或 worktree。文件锁不替代 Git 隔离。
+2. 优先选择不重叠的文件和模块。
+3. 编辑之前，在 `.agent/FILE_LOCKS.md` 登记预期的归属。
+4. 一个锁须包含：
 
 ```text
 Path or glob:
@@ -162,22 +162,22 @@ Last updated:
 State: ACTIVE | RELEASED | STALE | TAKEOVER_PENDING
 ```
 
-5. If two tasks require the same file:
-   - split the work by file when possible;
-   - sequence the tasks; or
-   - assign one integration agent to perform the shared-file edit.
-6. Never resolve a conflict by blindly choosing one entire version.
-7. Never perform repository-wide formatting during parallel work unless it is the explicit isolated task.
+5. 若两个任务需要同一个文件：
+   - 尽可能按文件拆分工作；
+   - 将任务排序依次执行；或
+   - 指派一个集成 Agent 来执行该共享文件改动。
+6. 绝不靠盲目选取整版本来解决冲突。
+7. 并行期间不做全仓库级别的格式化，除非这是被显式隔离出来的任务。
 
-## Stale lock and takeover protocol
+## 陈旧锁与接管协议
 
-A lock may be treated as stale only when work is clearly abandoned, the prior agent is unavailable, or the coordinating agent/user authorizes takeover.
+仅当工作明显被废弃、原 Agent 不可达、或协调 Agent/用户授权接管时，才可将一个锁视为陈旧。
 
-Before takeover:
+接管之前：
 
-1. Inspect the prior branch/worktree, `git status`, `git diff`, and latest handoff.
-2. Mark the old lock `STALE` or `TAKEOVER_PENDING`; do not delete its history.
-3. Record:
+1. 检视原分支/worktree、`git status`、`git diff` 以及最近的交接记录。
+2. 将旧锁标记为 `STALE` 或 `TAKEOVER_PENDING`；不要删除其历史。
+3. 记录：
 
 ```text
 Previous owner:
@@ -188,19 +188,19 @@ Uncommitted changes preserved:
 Verification performed:
 ```
 
-4. Continue from the verified state rather than recreating completed work.
+4. 从已校验的状态继续，而不是重做已完成的工作。
 
-## Execution and checkpoint protocol
+## 执行与检查点协议
 
-During work:
+工作期间：
 
-- Modify only the declared scope.
-- Avoid unrelated refactors, dependency upgrades, schema changes, API changes, or global formatting.
-- If scope must expand, update the task and locks before proceeding.
-- Preserve a recoverable checkpoint in `.agent/TASK_HANDOFF.md` after any material milestone or before stopping.
-- Record important architecture, API, data, or business-rule decisions under `.agent/decisions/ADR-XXXX-title.md`.
+- 仅修改已声明的范围。
+- 避免无关的重构、依赖升级、schema 变更、API 变更或全局格式化。
+- 若范围必须扩大，在继续前先更新任务与锁。
+- 在任何重大里程碑之后或停止之前，在 `.agent/TASK_HANDOFF.md` 保存一个可恢复的检查点。
+- 将重要的架构、API、数据或业务规则决策记录到 `.agent/decisions/ADR-XXXX-title.md`。
 
-Use this checkpoint structure:
+检查点结构如下：
 
 ```text
 Task ID:
@@ -218,11 +218,11 @@ Do not overwrite:
 Updated at:
 ```
 
-## Testing protocol
+## 测试协议
 
-Run the checks relevant to the project, such as tests, lint, type checking, builds, migrations, or manual flows.
+运行与项目相关的检查，例如测试、lint、类型检查、构建、迁移或手动流程。
 
-Record:
+记录：
 
 ```text
 Command:
@@ -232,31 +232,31 @@ Reason if not run:
 Manual verification:
 ```
 
-Rules:
+规则：
 
-- A pre-existing failure must be identified as pre-existing only when verified.
-- Do not delete or weaken tests to make a task pass.
-- Do not mark a task `DONE` with unresolved required checks.
+- 仅在核实后，才能将既有失败标记为既有失败。
+- 不得删除或弱化测试以让任务通过。
+- 不得在仍有未解决必需检查的情况下将任务标记为 `DONE`。
 
-## Handoff protocol
+## 交接协议
 
-Handoff is required when:
+下列情况必须交接：
 
-- work finishes;
-- work pauses before completion;
-- another agent must continue;
-- the task becomes blocked;
-- review is requested;
-- integration is requested;
-- context is becoming unreliable.
+- 工作完成；
+- 工作在完成前暂停；
+- 另一个 Agent 必须接续；
+- 任务受阻；
+- 请求审查；
+- 请求集成；
+- 上下文开始变得不可靠。
 
-Update `.agent/TASK_HANDOFF.md` and archive a copy to:
+更新 `.agent/TASK_HANDOFF.md` 并归档一份副本到：
 
 ```text
 .agent/handoffs/YYYY-MM-DD-HHMM-task-id-agent-id.md
 ```
 
-A handoff must contain:
+一份交接须包含：
 
 ```text
 # Task handoff
@@ -270,56 +270,56 @@ Branch/worktree:
 Status:
 
 ## Completed
-- Concrete completed work
-- Acceptance criteria already satisfied
+- 具体已完成的工作
+- 已满足的验收标准
 
 ## Changed files
-- path: what changed and why
+- path: 改了什么以及为什么
 
 ## Current position
-- Exact point where work stopped
-- Current runtime/build state
+- 工作停止的确切位置
+- 当前运行/构建状态
 
 ## Decisions
-- Confirmed decisions
-- ADR references
-- Decisions that should not be reopened without new evidence
+- 已确认的决策
+- ADR 引用
+- 在没有新证据前不应重开的决策
 
 ## Verification
-- Commands run
-- Exact pass/fail results
-- Checks not run and why
+- 已运行的命令
+- 确切的通过/失败结果
+- 未运行的检查及其原因
 
 ## Remaining work
-1. Concrete next action
-2. Following action
+1. 下一步具体动作
+2. 之后的动作
 
 ## Risks and known issues
-- Known bugs
-- Possible regressions
-- Conflicts or dependencies
+- 已知 bug
+- 可能的回归
+- 冲突或依赖
 
 ## Takeover instructions
-1. Files to read first
-2. Commands to run first
-3. Branch/worktree to inspect
-4. Work that must not be overwritten
-5. Expected next deliverable
+1. 先读哪些文件
+2. 先运行哪些命令
+3. 要检查的分支/worktree
+4. 不得覆盖的工作
+5. 预期的下一个交付物
 ```
 
-## Takeover procedure
+## 接管流程
 
-A receiving agent must not trust the handoff blindly.
+接手一方不得盲目信任交接说明。
 
-1. Read the handoff and relevant ADRs.
-2. Inspect Git state and actual diffs.
-3. Run the stated verification where practical.
-4. Compare documented state with repository state.
-5. Record discrepancies before editing.
-6. Update the task owner, status, locks, and current handoff.
-7. Continue from the first unverified or unfinished step.
+1. 阅读交接记录与相关 ADR。
+2. 检视 Git 状态与实际 diff。
+3. 在可行时执行交接中所述的验证。
+4. 将文档记录的状态与仓库实际状态进行对比。
+5. 在编辑之前先记录差异。
+6. 更新任务归属、状态、锁与当前交接记录。
+7. 从第一个未核实或未完成的步骤继续。
 
-Start the takeover response with:
+接管回复以如下格式开头：
 
 ```text
 Taken-over task:
@@ -331,50 +331,50 @@ Next action:
 Planned scope:
 ```
 
-## Review procedure
+## 审查流程
 
-Review adversarially. Do not assume the author or previous agent is correct.
+以对抗心态审查。不要默认作者或上一个 Agent 是正确的。
 
-Check:
+检查：
 
-- requirements and acceptance criteria;
-- edge cases and failure states;
-- regressions and unintended behavior changes;
-- API, schema, permission, security, performance, and data risks;
-- missing or weak tests;
-- unnecessary scope expansion;
-- consistency between code, task state, and handoff.
+- 需求与验收标准；
+- 边界情况与失败状态；
+- 回归与意外的行为变更；
+- API、schema、权限、安全、性能与数据风险；
+- 缺失或薄弱的测试；
+- 不必要的范围扩张；
+- 代码、任务状态与交接记录之间的一致性。
 
-Classify findings:
+问题分级：
 
 ```text
-P0: release-blocking security, data, money, or destructive failure
-P1: core-function failure or high-probability regression
-P2: normal correctness, UX, or maintainability issue
-P3: optional improvement
+P0: 发布阻断级的安全、数据、资金或破坏性故障
+P1: 核心功能失败或高概率回归
+P2: 一般正确性、UX 或可维护性问题
+P3: 可选改进
 ```
 
-A review agent should normally report findings first. It should only modify code when explicitly assigned a fix task or integration role.
+审查 Agent 通常应先报告问题。仅在被显式指派修复任务或集成角色时才修改代码。
 
-## Integration procedure
+## 集成流程
 
-An integration agent must:
+集成 Agent 必须：
 
-1. Read each task handoff and acceptance criteria.
-2. Inspect each branch diff independently.
-3. Confirm task scopes do not include accidental changes.
-4. Merge in dependency order.
-5. Resolve conflicts by understanding both intentions.
-6. Run relevant module checks and then broader regression checks.
-7. Update task statuses, release locks, refresh project state, and write an integration handoff.
+1. 阅读每个任务的交接记录与验收标准。
+2. 独立检视每个分支的 diff。
+3. 确认任务范围内没有夹带意外改动。
+4. 按依赖顺序合并。
+5. 通过理解双方意图来解决冲突。
+6. 先运行相关模块检查，再进行更广的回归检查。
+7. 更新任务状态、释放锁、刷新项目状态，并撰写集成交接记录。
 
-Do not mark integration complete merely because Git produced no textual conflicts.
+不得仅因 Git 没有产生文本冲突就判定集成完成。
 
-## Decision records
+## 决策记录
 
-Create an ADR when changing architecture, APIs, schemas, shared behavior, dependencies, or cross-module rules.
+当变更架构、API、schema、共享行为、依赖或跨模块规则时，创建 ADR。
 
-Use `.agent/decisions/ADR-XXXX-title.md`:
+使用 `.agent/decisions/ADR-XXXX-title.md`：
 
 ```text
 # Decision
@@ -399,26 +399,26 @@ Related tasks:
 ## Rollback
 ```
 
-## Completion criteria
+## 完成标准
 
-A task can be marked `DONE` only when all applicable items are true:
+只有当以下各项均成立时，才可将任务标记为 `DONE`：
 
 ```text
-[ ] Acceptance criteria are satisfied
-[ ] Changes stayed within the declared scope or scope expansion was recorded
-[ ] Other agents' work was preserved
-[ ] Required checks were actually run and recorded
-[ ] The task entry is current
-[ ] File locks are released
-[ ] Project state is current
-[ ] Handoff is current and archived
-[ ] Important decisions have ADRs
-[ ] Review/integration requirements are satisfied
-[ ] User or coordinating agent approved any requested commit/push
+[ ] 验收标准已满足
+[ ] 改动保持在声明范围内，或已记录范围扩张
+[ ] 保留了其他 Agent 的成果
+[ ] 必需检查确已运行并已记录
+[ ] 任务条目为最新
+[ ] 文件锁已释放
+[ ] 项目状态为最新
+[ ] 交接记录为最新且已归档
+[ ] 重要决策有对应的 ADR
+[ ] 审查/集成要求已满足
+[ ] 用户或协调 Agent 已批准所请求的提交/推送
 ```
 
-Otherwise use `IN_PROGRESS`, `BLOCKED`, `READY_FOR_REVIEW`, `CHANGES_REQUESTED`, or `READY_TO_INTEGRATE`.
+否则使用 `IN_PROGRESS`、`BLOCKED`、`READY_FOR_REVIEW`、`CHANGES_REQUESTED` 或 `READY_TO_INTEGRATE`。
 
-## Response behavior
+## 响应行为
 
-Keep user-facing updates short. When executing, report only meaningful milestones, discovered conflicts, failed checks, decisions needed, and final status. Do not dump internal bookkeeping unless requested.
+面向用户的更新保持简短。执行时，仅报告有意义的里程碑、发现的冲突、失败的检查、需要决策的事项与最终状态。除非被要求，否则不要倾倒内部簿记信息。

@@ -1,6 +1,6 @@
-# Task handoff
+# 任务交接
 
-## Identity
+## 身份
 
 Task ID:
 Task title:
@@ -9,18 +9,18 @@ Intended next role/agent:
 Branch/worktree:
 Status:
 
-## Completed
+## 已完成
 
-## Changed files
+## 已修改文件
 
-## Current position
+## 当前位置
 
-## Decisions
+## 决策
 
-## Verification
+## 验证
 
-## Remaining work
+## 剩余工作
 
-## Risks and known issues
+## 风险与已知问题
 
-## Takeover instructions
+## 接管说明

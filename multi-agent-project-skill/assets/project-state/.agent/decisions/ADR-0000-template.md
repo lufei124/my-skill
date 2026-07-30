@@ -1,20 +1,20 @@
-# Decision
+# 决策
 
 Status: proposed
 Date:
 Owners:
 Related tasks:
 
-## Context
+## 背景
 
-## Options considered
+## 备选方案
 
-## Decision
+## 决策
 
-## Rationale
+## 理由
 
-## Consequences
+## 影响
 
-## Risks
+## 风险
 
-## Rollback
+## 回滚

@@ -1,14 +1,14 @@
-# Agent Coordination
+# Agent 协作
 
-This repository may be edited by multiple AI agents concurrently or handed off at any time.
+本仓库可能被多个 AI Agent 并发编辑，或在任意时刻被交接。
 
-Before editing, use the `multi-agent-project-coordination` skill and read the durable state under `.agent/`.
+编辑之前，使用 `multi-agent-project-coordination` skill，并阅读 `.agent/` 下的持久状态。
 
-Hard rules:
+硬性规则：
 
-- Claim a task before changing files.
-- Use separate Git branches or worktrees for parallel tasks.
-- Record intended file scope and active locks.
-- Preserve unexplained and unmerged changes.
-- Update handoff state before pausing or transferring work.
-- Do not commit or push unless explicitly requested.
+- 改动文件前先认领任务。
+- 并行任务使用独立的 Git 分支或 worktree。
+- 记录预期的文件范围与活动锁。
+- 保留无法解释的和未合并的改动。
+- 暂停或转移工作前更新交接状态。
+- 除非被明确要求，否则不得提交或推送。

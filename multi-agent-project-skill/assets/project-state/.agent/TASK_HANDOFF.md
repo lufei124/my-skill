@@ -1,6 +1,6 @@
-# Current Task Handoff
+# 当前任务交接
 
-## Identity
+## 身份
 
 Task ID:
 Task title:
@@ -8,40 +8,40 @@ Outgoing/current agent:
 Intended next role/agent:
 Branch/worktree:
 Status:
-Updated at:
+更新时间：
 
-## Completed
+## 已完成
 
-- None recorded.
+- 暂无记录。
 
-## Changed files
+## 已修改文件
 
-- None recorded.
+- 暂无记录。
 
-## Current position
+## 当前位置
 
-- No active work recorded.
+- 未记录进行中的工作。
 
-## Decisions
+## 决策
 
-- None recorded.
+- 暂无记录。
 
-## Verification
+## 验证
 
-| Command/check | Result | Relevant output or reason not run |
+| 命令/检查 | 结果 | 相关输出或未运行原因 |
 |---|---|---|
 
-## Remaining work
+## 剩余工作
 
-1. None recorded.
+1. 暂无记录。
 
-## Risks and known issues
+## 风险与已知问题
 
-- None recorded.
+- 暂无记录。
 
-## Takeover instructions
+## 接管说明
 
-1. Read `.agent/PROJECT_STATE.md` and `.agent/TASK_BOARD.md`.
-2. Inspect `git status`, `git diff`, and the relevant branch.
-3. Verify documented test results.
-4. Preserve all unexplained changes.
+1. 阅读 `.agent/PROJECT_STATE.md` 与 `.agent/TASK_BOARD.md`。
+2. 检视 `git status`、`git diff` 以及相关分支。
+3. 核实文档中记录的测试结果。
+4. 保留所有无法解释的改动。

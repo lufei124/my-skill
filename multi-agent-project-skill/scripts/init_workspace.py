@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize durable multi-agent project state without overwriting existing files."""
+"""初始化持久化的多 Agent 项目状态，且默认不覆盖已有文件。"""
 
 from __future__ import annotations
 
@@ -9,48 +9,48 @@ from typing import Dict
 
 
 TEMPLATES: Dict[str, str] = {
-    "PROJECT_STATE.md": """# Project State
+    "PROJECT_STATE.md": """# 项目状态
 
-Last updated:
-Updated by:
-Current version/branch:
-Current phase:
+最后更新：
+更新者：
+当前版本/分支：
+当前阶段：
 
-## Completed
+## 已完成
 
-- None recorded.
+- 暂无记录。
 
-## In progress
+## 进行中
 
-- None recorded.
+- 暂无记录。
 
-## Ready for review
+## 待审查
 
-- None recorded.
+- 暂无记录。
 
-## Blocked
+## 受阻
 
-- None recorded.
+- 暂无记录。
 
-## Known issues and risks
+## 已知问题与风险
 
-- None recorded.
+- 暂无记录。
 
-## Recent decisions
+## 近期决策
 
-- None recorded.
+- 暂无记录。
 
-## Next priorities
+## 下一优先级
 
-1. Define the next task.
+1. 定义下一个任务。
 """,
-    "TASK_BOARD.md": """# Task Board
+    "TASK_BOARD.md": """# 任务看板
 
-| Task ID | Title | Owner agent | Status | Branch/worktree | Allowed scope | Dependencies | Updated at |
+| Task ID | 标题 | Owner agent | Status | Branch/worktree | Allowed scope | Dependencies | 更新时间 |
 |---|---|---|---|---|---|---|---|
-| TASK-001 | Initialize multi-agent project state | unassigned | BACKLOG | - | `.agent/` | - | - |
+| TASK-001 | 初始化多 Agent 项目状态 | unassigned | BACKLOG | - | `.agent/` | - | - |
 
-## Task details template
+## 任务详情模板
 
 ```text
 Task ID:
@@ -67,16 +67,16 @@ Started at:
 Updated at:
 ```
 """,
-    "FILE_LOCKS.md": """# File Locks
+    "FILE_LOCKS.md": """# 文件锁
 
-Locks are advisory coordination records. Parallel agents should still use separate Git branches or worktrees.
+锁是建议性的协调记录。并行 Agent 仍应使用独立的 Git 分支或 worktree。
 
-| Path or glob | Task ID | Owner agent | Branch/worktree | Reason | Acquired at | Last updated | State |
+| Path or glob | Task ID | Owner agent | Branch/worktree | 原因 | 获取时间 | 最后更新 | State |
 |---|---|---|---|---|---|---|---|
 
-Valid states: `ACTIVE`, `RELEASED`, `STALE`, `TAKEOVER_PENDING`.
+合法状态：`ACTIVE`、`RELEASED`、`STALE`、`TAKEOVER_PENDING`。
 
-## Takeover history template
+## 接管历史模板
 
 ```text
 Previous owner:
@@ -87,9 +87,9 @@ Uncommitted changes preserved:
 Verification performed:
 ```
 """,
-    "TASK_HANDOFF.md": """# Current Task Handoff
+    "TASK_HANDOFF.md": """# 当前任务交接
 
-## Identity
+## 身份
 
 Task ID:
 Task title:
@@ -97,71 +97,71 @@ Outgoing/current agent:
 Intended next role/agent:
 Branch/worktree:
 Status:
-Updated at:
+更新时间：
 
-## Completed
+## 已完成
 
-- None recorded.
+- 暂无记录。
 
-## Changed files
+## 已修改文件
 
-- None recorded.
+- 暂无记录。
 
-## Current position
+## 当前位置
 
-- No active work recorded.
+- 未记录进行中的工作。
 
-## Decisions
+## 决策
 
-- None recorded.
+- 暂无记录。
 
-## Verification
+## 验证
 
-| Command/check | Result | Relevant output or reason not run |
+| 命令/检查 | 结果 | 相关输出或未运行原因 |
 |---|---|---|
 
-## Remaining work
+## 剩余工作
 
-1. None recorded.
+1. 暂无记录。
 
-## Risks and known issues
+## 风险与已知问题
 
-- None recorded.
+- 暂无记录。
 
-## Takeover instructions
+## 接管说明
 
-1. Read `.agent/PROJECT_STATE.md` and `.agent/TASK_BOARD.md`.
-2. Inspect `git status`, `git diff`, and the relevant branch.
-3. Verify documented test results.
-4. Preserve all unexplained changes.
+1. 阅读 `.agent/PROJECT_STATE.md` 与 `.agent/TASK_BOARD.md`。
+2. 检视 `git status`、`git diff` 以及相关分支。
+3. 核实文档中记录的测试结果。
+4. 保留所有无法解释的改动。
 """,
 }
 
-ADR_TEMPLATE = """# Decision
+ADR_TEMPLATE = """# 决策
 
 Status: proposed
 Date:
 Owners:
 Related tasks:
 
-## Context
+## 背景
 
-## Options considered
+## 备选方案
 
-## Decision
+## 决策
 
-## Rationale
+## 理由
 
-## Consequences
+## 影响
 
-## Risks
+## 风险
 
-## Rollback
+## 回滚
 """
 
-HANDOFF_TEMPLATE = """# Task handoff
+HANDOFF_TEMPLATE = """# 任务交接
 
-## Identity
+## 身份
 
 Task ID:
 Task title:
@@ -170,62 +170,62 @@ Intended next role/agent:
 Branch/worktree:
 Status:
 
-## Completed
+## 已完成
 
-## Changed files
+## 已修改文件
 
-## Current position
+## 当前位置
 
-## Decisions
+## 决策
 
-## Verification
+## 验证
 
-## Remaining work
+## 剩余工作
 
-## Risks and known issues
+## 风险与已知问题
 
-## Takeover instructions
+## 接管说明
 """
 
-AGENTS_SNIPPET = """# Agent Coordination
+AGENTS_SNIPPET = """# Agent 协作
 
-This repository may be edited by multiple AI agents concurrently or handed off at any time.
+本仓库可能被多个 AI Agent 并发编辑，或在任意时刻被交接。
 
-Before editing, use the `multi-agent-project-coordination` skill and read the durable state under `.agent/`.
+编辑之前，使用 `multi-agent-project-coordination` skill，并阅读 `.agent/` 下的持久状态。
 
-Hard rules:
+硬性规则：
 
-- Claim a task before changing files.
-- Use separate Git branches or worktrees for parallel tasks.
-- Record intended file scope and active locks.
-- Preserve unexplained and unmerged changes.
-- Update handoff state before pausing or transferring work.
-- Do not commit or push unless explicitly requested.
+- 改动文件前先认领任务。
+- 并行任务使用独立的 Git 分支或 worktree。
+- 记录预期的文件范围与活动锁。
+- 保留无法解释的和未合并的改动。
+- 暂停或转移工作前更新交接状态。
+- 除非被明确要求，否则不得提交或推送。
 """
 
 
 def write_file(path: Path, content: str, force: bool) -> str:
     if path.exists() and not force:
-        return "kept"
+        return "保留"  # kept
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
-    return "written"
+    return "已写入"  # written
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project_root", nargs="?", default=".")
-    parser.add_argument("--force", action="store_true", help="overwrite managed template files")
+    parser.add_argument("--force", action="store_true", help="覆盖已有的受管模板文件")
     parser.add_argument(
         "--add-agents-md",
         action="store_true",
-        help="create a minimal AGENTS.md only when it is missing (or overwrite with --force)",
+        help="仅在 AGENTS.md 缺失时创建一个精简版（配合 --force 可覆盖）",
     )
     args = parser.parse_args()
 
     root = Path(args.project_root).expanduser().resolve()
     if not root.exists() or not root.is_dir():
-        parser.error(f"project root is not a directory: {root}")
+        parser.error(f"项目根目录不是有效目录：{root}")
 
     state = root / ".agent"
     (state / "decisions").mkdir(parents=True, exist_ok=True)
@@ -251,9 +251,9 @@ def main() -> int:
     if args.add_agents_md:
         results.append((root / "AGENTS.md", write_file(root / "AGENTS.md", AGENTS_SNIPPET, args.force)))
 
-    print(f"Initialized multi-agent state at: {state}")
+    print(f"已在以下位置初始化多 Agent 状态：{state}")
     for path, action in results:
-        print(f"- {action:7} {path.relative_to(root)}")
+        print(f"- {action}  {path.relative_to(root)}")
     return 0
 
 

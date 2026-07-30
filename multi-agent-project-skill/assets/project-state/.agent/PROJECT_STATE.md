@@ -1,34 +1,34 @@
-# Project State
+# 项目状态
 
-Last updated:
-Updated by:
-Current version/branch:
-Current phase:
+最后更新：
+更新者：
+当前版本/分支：
+当前阶段：
 
-## Completed
+## 已完成
 
-- None recorded.
+- 暂无记录。
 
-## In progress
+## 进行中
 
-- None recorded.
+- 暂无记录。
 
-## Ready for review
+## 待审查
 
-- None recorded.
+- 暂无记录。
 
-## Blocked
+## 受阻
 
-- None recorded.
+- 暂无记录。
 
-## Known issues and risks
+## 已知问题与风险
 
-- None recorded.
+- 暂无记录。
 
-## Recent decisions
+## 近期决策
 
-- None recorded.
+- 暂无记录。
 
-## Next priorities
+## 下一优先级
 
-1. Define the next task.
+1. 定义下一个任务。

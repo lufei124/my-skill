@@ -1,13 +1,13 @@
-# File Locks
+# 文件锁
 
-Locks are advisory coordination records. Parallel agents should still use separate Git branches or worktrees.
+锁是建议性的协调记录。并行 Agent 仍应使用独立的 Git 分支或 worktree。
 
-| Path or glob | Task ID | Owner agent | Branch/worktree | Reason | Acquired at | Last updated | State |
+| Path or glob | Task ID | Owner agent | Branch/worktree | 原因 | 获取时间 | 最后更新 | State |
 |---|---|---|---|---|---|---|---|
 
-Valid states: `ACTIVE`, `RELEASED`, `STALE`, `TAKEOVER_PENDING`.
+合法状态：`ACTIVE`、`RELEASED`、`STALE`、`TAKEOVER_PENDING`。
 
-## Takeover history template
+## 接管历史模板
 
 ```text
 Previous owner:
