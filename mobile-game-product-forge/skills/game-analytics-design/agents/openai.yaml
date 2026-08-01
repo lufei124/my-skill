@@ -1,0 +1,6 @@
+interface:
+  display_name: "游戏埋点与指标"
+  short_description: "设计埋点事件、指标、漏斗并去重已有基线"
+  default_prompt: "Use $game-analytics-design only when delegated by $mobile-game-product-forge for a confirmed feature scope or when the user explicitly asks only for events, metrics, funnels, or experiment measurement. Do not capture broad feature/system/PRD requests; route those to the root orchestrator. Deduplicate against current event baselines before proposing additions."
+policy:
+  allow_implicit_invocation: true

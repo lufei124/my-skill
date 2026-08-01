@@ -1,0 +1,10 @@
+{
+  "name": "mobile-game-product-forge",
+  "version": "3.4.0",
+  "description": "Mobile-game product requirements workshop: lightweight orchestrator plus independently callable sub-skills and optional project knowledge packs.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "validate": "bash scripts/validate.sh"
+  }
+}

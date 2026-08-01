@@ -1,0 +1,6 @@
+interface:
+  display_name: "游戏知识维护提案"
+  short_description: "提出值得长期保存的知识维护建议，不直接写入"
+  default_prompt: "Use $game-knowledge-maintenance-proposal only after a finalized PRD when delegated by $mobile-game-product-forge, or when the user explicitly asks only for a knowledge-maintenance proposal. Do not capture active feature design, requirement research, or PRD creation. Propose evidence-backed long-term updates without writing to the knowledge base."
+policy:
+  allow_implicit_invocation: true

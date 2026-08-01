@@ -1,0 +1,6 @@
+interface:
+  display_name: "游戏 PRD 评审"
+  short_description: "多角色评审、争议升级与最终校验"
+  default_prompt: "Use $game-prd-review only when delegated by $mobile-game-product-forge for formal review/validation or when the user explicitly asks only to review or validate an existing PRD as a narrow task. Do not capture feature-design or PRD-generation requests. Validate the review gate, give roles the same frozen inputs, rerun stale roles, expand evidence on conflict/high risk, Review the unified execution PRD structure, flag technical-layer module over-splitting and decorative diagrams, require configuration contracts instead of operations-backend design, and pass only with consistent versions and no unresolved major dispute."
+policy:
+  allow_implicit_invocation: true

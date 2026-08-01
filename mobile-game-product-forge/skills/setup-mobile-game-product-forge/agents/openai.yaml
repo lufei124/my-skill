@@ -1,0 +1,6 @@
+interface:
+  display_name: "初始化移动游戏需求工坊"
+  short_description: "配置项目目录、知识档案、操作指南与飞书交付策略"
+  default_prompt: "Use $setup-mobile-game-product-forge to inspect and initialize this project, choose a knowledge profile, write the project operation guide, and report how to start the first formal requirement."
+policy:
+  allow_implicit_invocation: false

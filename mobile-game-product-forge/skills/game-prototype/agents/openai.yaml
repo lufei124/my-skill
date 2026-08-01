@@ -1,0 +1,6 @@
+interface:
+  display_name: "游戏交互原型"
+  short_description: "生成单次需求、模块级单文件可点击 HTML 原型，确认流程、状态与异常，供后续 PRD 使用"
+  default_prompt: "Use $game-prototype only when delegated by $mobile-game-product-forge after research and requirement confirmation with prototype.applicability=required, or when the user explicitly asks only for a clickable prototype. Do not capture broad feature or formal-PRD requests. Validate the gate, build the single-file HTML prototype, and require COMPLETE metadata; never run for an approved not_applicable waiver."
+policy:
+  allow_implicit_invocation: true

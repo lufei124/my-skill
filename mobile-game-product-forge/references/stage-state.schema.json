@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mobile-game-product-forge.local/stage-state.schema.json",
+  "title": "mobile-game-product-forge formal requirement stage state",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "requirement",
+    "projectContext",
+    "requirementSummary",
+    "prototype",
+    "prd",
+    "review",
+    "validation",
+    "delivery",
+    "knowledgeProposal",
+    "blockers",
+    "nextAction",
+    "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.1"
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["name", "mode", "complexity", "owner", "currentStage"],
+      "properties": {
+        "name": {"type": "string"},
+        "mode": {
+          "enum": ["existing_module", "new_module", "general_standard"]
+        },
+        "complexity": {
+          "enum": ["L1", "L2", "L3"]
+        },
+        "owner": {"type": "string"},
+        "currentStage": {
+          "enum": [
+            "requirement_discovery",
+            "requirement_confirmation",
+            "prototype",
+            "prd",
+            "review",
+            "validation",
+            "final",
+            "delivery",
+            "complete"
+          ]
+        }
+      }
+    },
+    "projectContext": {
+      "$ref": "#/$defs/versionedArtifact",
+      "properties": {
+        "status": {
+          "enum": ["not_started", "in_progress", "completed"]
+        }
+      }
+    },
+    "requirementSummary": {
+      "$ref": "#/$defs/versionedArtifact",
+      "properties": {
+        "status": {
+          "enum": ["draft", "confirmed", "superseded"]
+        }
+      }
+    },
+    "prototype": {
+      "type": "object",
+      "required": [
+        "applicability",
+        "status",
+        "file",
+        "version",
+        "confirmedAt",
+        "waiverReason",
+        "approvedBy",
+        "approvedAt"
+      ],
+      "properties": {
+        "applicability": {
+          "enum": ["required", "not_applicable"]
+        },
+        "status": {
+          "enum": ["not_started", "in_progress", "confirmed", "waived"]
+        },
+        "file": {"type": "string"},
+        "version": {"type": "string"},
+        "confirmedAt": {"type": "string"},
+        "waiverReason": {"type": "string"},
+        "approvedBy": {"type": "string"},
+        "approvedAt": {"type": "string"}
+      }
+    },
+    "prd": {
+      "$ref": "#/$defs/versionedArtifact",
+      "properties": {
+        "status": {
+          "enum": ["not_started", "draft", "in_review", "final"]
+        },
+        "syncedTo": {
+          "type": "string",
+          "description": "正式终稿同步位置（docs/prd/<需求简称>.md 或项目既有正式 PRD 目录）；final 门禁与 prd.status=final 的跨字段一致性要求非空且文件存在"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["status", "file", "version", "openP0"],
+      "properties": {
+        "status": {
+          "enum": ["not_started", "in_progress", "disputed", "passed"]
+        },
+        "file": {"type": "string"},
+        "version": {"type": "string"},
+        "openP0": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["status", "file", "targetPrdVersion"],
+      "properties": {
+        "status": {
+          "enum": ["not_started", "conditional", "passed", "failed"]
+        },
+        "file": {"type": "string"},
+        "targetPrdVersion": {"type": "string"}
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": ["required", "channel", "status", "file", "publishedAt"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "channel": {
+          "enum": ["feishu"]
+        },
+        "status": {
+          "enum": [
+            "not_required",
+            "not_started",
+            "in_progress",
+            "published",
+            "failed"
+          ]
+        },
+        "file": {"type": "string"},
+        "publishedAt": {"type": "string"}
+      }
+    },
+    "knowledgeProposal": {
+      "type": "object",
+      "required": ["status", "file"],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_evaluated",
+            "not_required",
+            "proposed",
+            "accepted",
+            "rejected"
+          ]
+        },
+        "file": {"type": "string"}
+      }
+    },
+    "blockers": {
+      "type": "array"
+    },
+    "nextAction": {"type": "string"},
+    "updatedAt": {"type": "string"}
+  },
+  "$defs": {
+    "versionedArtifact": {
+      "type": "object",
+      "required": ["status", "file", "version"],
+      "properties": {
+        "status": {"type": "string"},
+        "file": {"type": "string"},
+        "version": {"type": "string"}
+      }
+    }
+  },
+  "x-complexityPolicies": {
+    "L1": {
+      "interview": "compact",
+      "prototype": "decide_required_or_waived",
+      "prd": "compact",
+      "review": "focused",
+      "reviewRoleCount": "1-2",
+      "knowledgeProposal": "not_default",
+      "deliveryRecord": "only_when_required"
+    },
+    "L2": {
+      "interview": "standard",
+      "prototype": "decide_required_or_waived",
+      "prd": "standard",
+      "review": "dynamic",
+      "reviewRoleCount": "relevant",
+      "knowledgeProposal": "evaluate_when_valuable",
+      "deliveryRecord": "when_delivery_runs"
+    },
+    "L3": {
+      "interview": "full",
+      "prototype": "usually_required",
+      "prd": "full",
+      "review": "full",
+      "reviewRoleCount": "all_relevant",
+      "knowledgeProposal": "must_evaluate",
+      "deliveryRecord": "when_delivery_runs"
+    }
+  }
+}

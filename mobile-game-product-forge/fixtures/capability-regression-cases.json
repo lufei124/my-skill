@@ -1,0 +1,302 @@
+{
+  "schemaVersion": "1.0",
+  "metrics": [
+    "criticalRuleOmissions",
+    "unsupportedInferences",
+    "clarifyingQuestionQuality",
+    "decisionRuleAcceptanceCoverage",
+    "prototypePrdDrift",
+    "reviewP0P1Findings",
+    "inputTokens",
+    "elapsedSeconds",
+    "filesRead",
+    "fullHtmlReads"
+  ],
+  "cases": [
+    {
+      "id": "CAP-001",
+      "category": "l1_config_change",
+      "name": "L1 配置字段调整",
+      "request": "把每日免费钻石广告次数从 3 次改为按国家配置。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L1",
+        "prototypeApplicability": "not_applicable",
+        "requiredEvidence": [
+          "currentConfig",
+          "currentRule",
+          "affectedCountries"
+        ],
+        "requiredBehaviors": [
+          "compactResearchArtifact",
+          "currentVsTarget",
+          "configAndAcceptanceCoverage"
+        ],
+        "forbiddenBehaviors": [
+          "skipResearch",
+          "forcePrototype",
+          "readAllHistoryByDefault"
+        ]
+      }
+    },
+    {
+      "id": "CAP-002",
+      "category": "l2_new_ui",
+      "name": "L2 新页面功能",
+      "request": "新增每日任务页面，包含领取、已领取、未达成和网络失败状态。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L2",
+        "prototypeApplicability": "required",
+        "requiredEvidence": [
+          "currentNavigation",
+          "uiRules",
+          "rewardRules"
+        ],
+        "requiredBehaviors": [
+          "confirmedPrototype",
+          "completePrototypeMetadata",
+          "prototypeToPrdTraceability"
+        ],
+        "forbiddenBehaviors": [
+          "skipPrototypeConfirmation",
+          "inventUiWithoutEvidence"
+        ]
+      }
+    },
+    {
+      "id": "CAP-003",
+      "category": "l2_no_ui_backend_rule",
+      "name": "L2 无 UI 服务端规则",
+      "request": "增加订单重复回调的幂等和补偿规则，不改客户端页面。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L2",
+        "prototypeApplicability": "not_applicable",
+        "requiredEvidence": [
+          "currentOrderStates",
+          "callbackContract",
+          "compensationLogs"
+        ],
+        "requiredBehaviors": [
+          "productOwnerWaiver",
+          "idempotencyAndCompensation",
+          "noPrototypeMetadataRequired"
+        ],
+        "forbiddenBehaviors": [
+          "forcePrototype",
+          "skipWaiverEvidence"
+        ]
+      }
+    },
+    {
+      "id": "CAP-004",
+      "category": "l3_payment_subscription",
+      "name": "L3 支付订阅与版本升级",
+      "request": "把 Google Play Billing 从当前版本升级到目标版本，并补齐订阅恢复、退款和服务端通知。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L3",
+        "prototypeApplicability": "not_applicable",
+        "requiredEvidence": [
+          "currentIntegrationVersion",
+          "targetVersion",
+          "targetRegionPolicy",
+          "targetReleaseDatePolicy",
+          "sourceVersionDocs",
+          "targetVersionDocs",
+          "officialMigrationGuide"
+        ],
+        "requiredBehaviors": [
+          "versionMatchedOfficialEvidence",
+          "idempotencyAndCompensation",
+          "refundAndNotificationCoverage",
+          "noSoftBudgetLimit"
+        ],
+        "forbiddenBehaviors": [
+          "useLatestDocsWithoutVersionMatch",
+          "inferCurrentCapabilityFromTargetVersion"
+        ]
+      }
+    },
+    {
+      "id": "CAP-005",
+      "category": "historical_module_iteration",
+      "name": "历史模块继续迭代",
+      "request": "在已有商城模块上增加礼包限购，历史 PRD 和当前配置不一致。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L2",
+        "prototypeApplicability": "required",
+        "requiredEvidence": [
+          "currentImplementation",
+          "currentConfig",
+          "historicalPrd",
+          "decisionLedger"
+        ],
+        "requiredBehaviors": [
+          "separateCurrentHistoryTarget",
+          "reportConflict",
+          "targetedHistoryRead"
+        ],
+        "forbiddenBehaviors": [
+          "treatHistoricalPrdAsCurrent",
+          "treatCurrentBugAsTargetRule"
+        ]
+      }
+    },
+    {
+      "id": "CAP-006",
+      "category": "source_conflict",
+      "name": "资料来源互相冲突",
+      "request": "用户说每日领取 1 次，知识库写 3 次，当前配置是 2 次。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L1",
+        "prototypeApplicability": "not_applicable",
+        "requiredEvidence": [
+          "userStatement",
+          "knowledgeVersion",
+          "currentConfig"
+        ],
+        "requiredBehaviors": [
+          "reportConflict",
+          "stateCurrentState",
+          "requestTargetDecision"
+        ],
+        "forbiddenBehaviors": [
+          "silentlyChooseOneSource",
+          "presentAssumptionAsConfirmed"
+        ]
+      }
+    },
+    {
+      "id": "CAP-007",
+      "category": "independent_prd_review",
+      "name": "独立 PRD 评审",
+      "request": "只评审这份现有 PRD，不创建正式需求状态。",
+      "expected": {
+        "entrySkill": "game-prd-review",
+        "complexity": "narrow_task",
+        "prototypeApplicability": "unknown",
+        "requiredEvidence": [
+          "providedPrd"
+        ],
+        "requiredBehaviors": [
+          "markNarrowTask",
+          "doNotModifyFormalState",
+          "stateFidelityLimit"
+        ],
+        "forbiddenBehaviors": [
+          "claimFormalWorkflowComplete",
+          "inventMissingPrototype"
+        ]
+      }
+    },
+    {
+      "id": "CAP-008",
+      "category": "historical_prototype_reuse",
+      "name": "旧原型继续用于正式需求",
+      "request": "继续使用旧 HTML 原型写正式 PRD，但 metadata 只有状态和版本。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L2",
+        "prototypeApplicability": "required",
+        "requiredEvidence": [
+          "historicalPrototypeHtml",
+          "historicalMinimalMetadata",
+          "confirmedRequirement"
+        ],
+        "requiredBehaviors": [
+          "classifyMetadataIncomplete",
+          "targetedHtmlRead",
+          "completeMetadataBeforePrd"
+        ],
+        "forbiddenBehaviors": [
+          "acceptMinimalMetadataAsComplete",
+          "skipHtmlEvidence",
+          "forceFullHtmlReadFirst"
+        ]
+      }
+    },
+    {
+      "id": "CAP-009",
+      "category": "multi_module_prd_structure",
+      "name": "多模块功能不按技术层过拆",
+      "request": "新增每日免费奖励，涉及商城展示、奖励发放、用户资产和配置表。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L2",
+        "prototypeApplicability": "required",
+        "requiredEvidence": [
+          "currentShopFlow",
+          "rewardRule",
+          "assetAuthority",
+          "currentConfig"
+        ],
+        "requiredBehaviors": [
+          "unifiedSevenSectionPrd",
+          "affectedModulesTable",
+          "rulesOrganizedByBusinessCapability"
+        ],
+        "forbiddenBehaviors": [
+          "splitByClientServerDatabase",
+          "oneChapterPerTechnicalModule",
+          "duplicateCrossModuleRules"
+        ]
+      }
+    },
+    {
+      "id": "CAP-010",
+      "category": "diagram_selection",
+      "name": "按问题选择必要图",
+      "request": "设计包含两个页面、服务端异步结算和失败恢复的抽奖功能。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L3",
+        "prototypeApplicability": "required",
+        "requiredEvidence": [
+          "pageFlow",
+          "settlementContract",
+          "recoveryRule"
+        ],
+        "requiredBehaviors": [
+          "pageFlowDiagramWhenNeeded",
+          "sequenceDiagramForAsyncSettlement",
+          "eachDiagramSolvesOneProblem"
+        ],
+        "forbiddenBehaviors": [
+          "generateAllDiagramTypes",
+          "singleOverloadedDiagram",
+          "diagramReplacesRulesOrAcceptance"
+        ]
+      }
+    },
+    {
+      "id": "CAP-011",
+      "category": "config_without_ops_backend",
+      "name": "配置表替代运营后台设计",
+      "request": "增加按国家配置广告次数和奖励内容，不开发运营后台。",
+      "expected": {
+        "entrySkill": "mobile-game-product-forge",
+        "complexity": "L1",
+        "prototypeApplicability": "not_applicable",
+        "requiredEvidence": [
+          "currentConfig",
+          "countryRule",
+          "rewardRule"
+        ],
+        "requiredBehaviors": [
+          "configurationContract",
+          "defaultAndValidation",
+          "effectiveAndRollbackRules"
+        ],
+        "forbiddenBehaviors": [
+          "generateOperationsBackend",
+          "inventAdminPages",
+          "forcePrototype"
+        ]
+      }
+    }
+  ]
+}

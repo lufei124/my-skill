@@ -1,0 +1,6 @@
+interface:
+  display_name: "移动游戏产品需求工坊"
+  short_description: "移动游戏需求澄清、原型、评审与PRD全流程协作工坊"
+  default_prompt: "Use $mobile-game-product-forge as the default entry for every new, broad, continued, end-to-end, or formal mobile-game requirement unless the user explicitly limits the request to one narrow stage. Orchestrate evidence-backed research, requirement confirmation, required prototype or approved not_applicable waiver, PRD, review, validation, and optional delivery. Match external policy to target region/date and SDK/API evidence to the current or confirmed target version; for migrations read source, target, and official migration guidance. Enforce all existing gates. Generate new PRDs with the unified execution structure: concise implementation goal, one overall flow, R-### business rules, conditional UI/interface/data/config sections, relevant exceptions, and AC-### acceptance. Do not split by technical layers or create an operations-backend section; choose diagrams only when they solve a specific problem."
+policy:
+  allow_implicit_invocation: true

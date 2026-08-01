@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# pre-push 门禁（替代 Gitee 上不生效的 GitHub Actions）。
+# 启用：git config core.hooksPath scripts/githooks
+set -euo pipefail
+
+repo="$(git rev-parse --show-toplevel)"
+
+echo "[pre-push] validate.sh"
+bash "$repo/scripts/validate.sh"
+
+echo "[pre-push] install.sh 语法检查"
+bash -n "$repo/scripts/install.sh"
+
+echo "[pre-push] install.sh 冒烟（临时目录）"
+smoke_skills="$(mktemp -d)"
+smoke_target="$(mktemp -d)"
+trap 'rm -rf "$smoke_skills" "$smoke_target"' EXIT
+CLAUDE_SKILLS_DIR="$smoke_skills" bash "$repo/scripts/install.sh" \
+  --agent claude --profile core-life-reboots --target "$smoke_target" >/dev/null
+[ -L "$smoke_skills/mobile-game-product-forge" ] || { echo "冒烟失败：软链未创建" >&2; exit 1; }
+receipt="$smoke_target/knowledge/.installed-packs/life-reboots.md"
+[ -f "$receipt" ] || { echo "冒烟失败：知识包回执缺失" >&2; exit 1; }
+grep -Eq '^version: v?[0-9]+(\.[0-9]+)+' "$receipt" || { echo "冒烟失败：回执 version 行非法" >&2; exit 1; }
+
+if command -v claude >/dev/null 2>&1; then
+  echo "[pre-push] claude plugin validate"
+  (cd "$repo" && claude plugin validate .)
+fi
+
+echo "[pre-push] OK"

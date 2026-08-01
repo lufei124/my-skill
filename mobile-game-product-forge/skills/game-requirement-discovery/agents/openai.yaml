@@ -1,0 +1,6 @@
+interface:
+  display_name: "游戏需求调研"
+  short_description: "核验现状、证据与冲突，形成可确认的需求摘要草稿"
+  default_prompt: "Use $game-requirement-discovery only when delegated by $mobile-game-product-forge for the research stage or when the user explicitly asks only for research/clarification without prototype or PRD. Do not capture broad feature, system-design, module-revision, or formal-PRD requests; route those to the root orchestrator. Research at L1/L2/L3 depth, separate current from target state, and match policy/SDK evidence by region, date, and version."
+policy:
+  allow_implicit_invocation: true

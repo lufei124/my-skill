@@ -1,0 +1,6 @@
+ interface:
+   display_name: "游戏 PRD 发布与交付"
+   short_description: "把终稿 PRD 发布到飞书云文档"
+   default_prompt: "Use $game-prd-publish explicitly only when $mobile-game-product-forge delegates required delivery of an already-final PRD or the user explicitly asks only to publish an already-final PRD. Never use it for drafting, review, or deciding finality. Verify final PRD and validation evidence; delivery failure must not change PRD final state."
+ policy:
+   allow_implicit_invocation: false

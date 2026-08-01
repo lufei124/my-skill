@@ -1,0 +1,15 @@
+{
+  "name": "mobile-game-product-forge",
+  "version": "3.4.0",
+  "description": "Mobile-game product requirements workshop: a lightweight orchestrator plus independently callable sub-skills for requirement discovery, prototyping, PRD writing, review, analytics, and knowledge maintenance.",
+  "author": {
+    "name": "纪伟",
+    "email": "wei.ji@fairyland-tek.com"
+  },
+  "license": "MIT",
+  "homepage": "https://gitee.com/xianlan---shanghai-g/mobile-game-product-forge",
+  "repository": "git@gitee.com:xianlan---shanghai-g/mobile-game-product-forge.git",
+  "skills": [
+    "./"
+  ]
+}

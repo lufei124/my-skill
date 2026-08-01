@@ -1,0 +1,6 @@
+interface:
+  display_name: "游戏 PRD 写作"
+  short_description: "经正式门禁把确认原型或豁免转化为 PRD"
+  default_prompt: "Use $game-prd-writing only after $mobile-game-product-forge passes the formal PRD gate and delegates writing, or when the user explicitly asks only for a clearly labeled non-formal PRD draft. Broad requests to design a feature or write a formal PRD must route to the root orchestrator first. Use the unified 7-section execution structure, keep the implementation goal concise, organize by business rules rather than technical modules, omit operations-backend design, and select flow/page/sequence/state/module/data diagrams only when triggered. Match third-party policy by region/date and SDK/API evidence by current/target version; migrations require source, target, and official migration guidance."
+policy:
+  allow_implicit_invocation: false

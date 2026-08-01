@@ -1,0 +1,46 @@
+# 校验清单，不驱动安装。
+# scripts/install.sh / install.ps1 不解析本文件：安装范围是「整包软链」，
+# --profile / -Profile 只决定是否安装知识包（见 install.sh install_knowledge）。
+# 本文件由 scripts/validate.sh #6 / #6b / #12 消费，用于防止子 Skill 漏登记、
+# 路径写错，以及两份 profile 的 skills 清单漂移。改这里不会改变安装行为。
+id: "core"
+description: "Install the generic mobile-game product workflow without project knowledge."
+skills:
+  - name: "mobile-game-product-forge"
+    source_files:
+      - "SKILL.md"
+      - "agents/"
+      - "references/"
+      - "operation-guide.md"
+      - "install-guide.md"
+      - "scripts/check-stage-gate.py"
+      - "scripts/stage_gate_core.py"
+      - "scripts/prototype_meta.py"
+      - "scripts/stage_gate_selftest.py"
+      - "scripts/lint-prd.py"
+      - "scripts/lint-review-report.py"
+  - name: "setup-mobile-game-product-forge"
+    source_files:
+      - "skills/setup-mobile-game-product-forge/"
+  - name: "game-requirement-discovery"
+    source_files:
+      - "skills/game-requirement-discovery/"
+  - name: "game-prototype"
+    source_files:
+      - "skills/game-prototype/"
+  - name: "game-prd-writing"
+    source_files:
+      - "skills/game-prd-writing/"
+  - name: "game-prd-review"
+    source_files:
+      - "skills/game-prd-review/"
+  - name: "game-prd-publish"
+    source_files:
+      - "skills/game-prd-publish/"
+  - name: "game-analytics-design"
+    source_files:
+      - "skills/game-analytics-design/"
+  - name: "game-knowledge-maintenance-proposal"
+    source_files:
+      - "skills/game-knowledge-maintenance-proposal/"
+project_knowledge: null

@@ -1,0 +1,223 @@
+{
+  "schemaVersion": "1.0",
+  "cases": [
+    {
+      "id": "ROUTE-001",
+      "category": "broad_formal",
+      "request": "帮我设计一个新的 VIP 订阅系统。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "新系统且未限定单一阶段",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-002",
+      "category": "broad_formal",
+      "request": "商城需要增加限时礼包功能，帮我把需求做完整。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "已有模块正式迭代",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-003",
+      "category": "broad_formal",
+      "request": "继续上次的广告频控需求。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "继续历史正式需求",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-004",
+      "category": "broad_formal",
+      "request": "帮我写一份正式 PRD：服务端增加订单补偿规则。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "正式 PRD 必须从根编排器进入",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-005",
+      "category": "broad_formal",
+      "request": "优化新手引导，让海外用户更容易理解。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "宽泛功能优化且涉及外部研究",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-006",
+      "category": "broad_formal",
+      "request": "帮我做这个功能。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "未限定阶段的宽泛请求",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-007",
+      "category": "research_only",
+      "request": "只调研这个付费功能的当前实现和风险，不要做原型或 PRD。",
+      "expectedSkill": "game-requirement-discovery",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只做调研",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-008",
+      "category": "research_only",
+      "request": "只帮我澄清这份需求里的冲突和待确认项。",
+      "expectedSkill": "game-requirement-discovery",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只做需求澄清",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-009",
+      "category": "prototype_only",
+      "request": "只做一个可点击的商城弹窗原型，不继续写 PRD。",
+      "expectedSkill": "game-prototype",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只做原型",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-010",
+      "category": "prototype_only",
+      "request": "只迭代我提供的 HTML 原型，把异常状态补齐。",
+      "expectedSkill": "game-prototype",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只迭代原型",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-011",
+      "category": "review_only",
+      "request": "只评审这份现有 PRD，不进入正式需求流程。",
+      "expectedSkill": "game-prd-review",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只评审已有 PRD",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-012",
+      "category": "review_only",
+      "request": "只校验这份 PRD 的规则编号、验收和风险。",
+      "expectedSkill": "game-prd-review",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只校验已有 PRD",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-013",
+      "category": "analytics_only",
+      "request": "只给这个功能补埋点和漏斗，不改功能方案。",
+      "expectedSkill": "game-analytics-design",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只做埋点",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-014",
+      "category": "analytics_only",
+      "request": "只设计 A/B 实验的指标和口径。",
+      "expectedSkill": "game-analytics-design",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只做实验指标",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-015",
+      "category": "knowledge_only",
+      "request": "这份 PRD 已经终稿，只生成知识库维护提案，不要直接写入。",
+      "expectedSkill": "game-knowledge-maintenance-proposal",
+      "executionMode": "narrow_task",
+      "reason": "用户明确只做知识维护提案",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-016",
+      "category": "draft_only",
+      "request": "只给我一份非正式 PRD 草稿，不走完整流程。",
+      "expectedSkill": "game-prd-writing",
+      "executionMode": "narrow_task",
+      "reason": "用户明确要求非正式草稿",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-017",
+      "category": "publish_only",
+      "request": "这份 PRD 已终稿并通过校验，只发布到飞书。",
+      "expectedSkill": "game-prd-publish",
+      "executionMode": "explicit",
+      "reason": "用户明确只发布已终稿 PRD",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-018",
+      "category": "setup",
+      "request": "$setup-mobile-game-product-forge",
+      "expectedSkill": "setup-mobile-game-product-forge",
+      "executionMode": "explicit",
+      "reason": "setup 是 disable-model-invocation: true 的用户显式入口，只有显式调用才会触发",
+      "style": "explicit_invocation"
+    },
+    {
+      "id": "ROUTE-019",
+      "category": "setup_guarded",
+      "request": "初始化当前项目的 mobile-game-product-forge。",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "user_action_required",
+      "expectedBehavior": "不路由到 setup（模型无法调用 disable-model-invocation 的 Skill）；提示用户显式调用 $setup-mobile-game-product-forge，且不代为创建 history/、docs/prd/ 或知识包",
+      "reason": "自然语言初始化请求不得被静默代办；这是真实会发生的场景，守的是提示而不是路由",
+      "style": "textbook"
+    },
+    {
+      "id": "ROUTE-020",
+      "category": "broad_formal",
+      "style": "colloquial",
+      "request": "商城那个礼包，做一版",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "口语省略式：无「帮我把需求做完整」这类完整表述，仍是已有模块的正式迭代，不得因说得随意就降级为窄任务"
+    },
+    {
+      "id": "ROUTE-021",
+      "category": "review_only",
+      "style": "colloquial",
+      "request": "这份 prd 帮我挑挑毛病，别的先别动",
+      "expectedSkill": "game-prd-review",
+      "executionMode": "narrow_task",
+      "reason": "口语省略式：没有「只评审」字样，但「别的先别动」等价于窄任务边界"
+    },
+    {
+      "id": "ROUTE-022",
+      "category": "research_only",
+      "style": "colloquial",
+      "request": "先别写 prd，帮我把需求理一理",
+      "expectedSkill": "game-requirement-discovery",
+      "executionMode": "narrow_task",
+      "reason": "口语否定式：显式排除 PRD 阶段，只做调研澄清"
+    },
+    {
+      "id": "ROUTE-023",
+      "category": "broad_formal",
+      "style": "mixed_language",
+      "request": "新做个 daily login reward，帮我把需求做完整",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "formal",
+      "reason": "中英混合：英文功能名不影响判定，仍是新系统的正式编排"
+    },
+    {
+      "id": "ROUTE-024",
+      "category": "ambiguous_reference",
+      "style": "colloquial",
+      "request": "继续商城那个",
+      "expectedSkill": "mobile-game-product-forge",
+      "executionMode": "user_action_required",
+      "expectedBehavior": "先扫 history/*/00-stage-state.json 形成候选集；命中多个时列出「需求简称 + 日期 + 当前阶段」请产品负责人点选，禁止按目录最近修改时间猜选（见 workflow.md 0.2）",
+      "reason": "真歧义：指代同时命中多个需求目录，正确行为是澄清而不是选一个继续"
+    }
+  ]
+}

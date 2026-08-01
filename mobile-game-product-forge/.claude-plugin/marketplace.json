@@ -1,0 +1,18 @@
+{
+  "name": "fairyland-forge",
+  "owner": {
+    "name": "纪伟",
+    "email": "wei.ji@fairyland-tek.com"
+  },
+  "metadata": {
+    "description": "Fairyland internal Claude Code plugin marketplace (Gitee-hosted).",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "mobile-game-product-forge",
+      "source": "./",
+      "description": "Mobile-game product requirements workshop: orchestrator plus sub-skills for requirement discovery, prototyping, PRD writing, review, analytics, and knowledge maintenance."
+    }
+  ]
+}
