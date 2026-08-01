@@ -1,0 +1,10 @@
+{
+  "name": "multi-agent-project-skill",
+  "version": "1.0.0",
+  "description": "Initialize an AI-collaboration-ready project skeleton and define the protocol for multiple AI agents to safely edit, hand off, review and integrate work in parallel.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "validate": "bash scripts/validate.sh"
+  }
+}

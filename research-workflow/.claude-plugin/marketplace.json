@@ -1,0 +1,18 @@
+{
+  "name": "research-workflow-marketplace",
+  "owner": {
+    "name": "lufei124",
+    "email": "lfei7277@gmail.com"
+  },
+  "metadata": {
+    "description": "Self-hosted Claude Code plugin marketplace for the research-workflow skill.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "research-workflow",
+      "source": "./",
+      "description": "Domain-agnostic deep-research skill: force grilling alignment, then orchestrate a multi-agent virtual team (parallel drafting, red-team adversarial, review-committee synthesis) to produce structured research docs under .scratch/research/NN-topic/."
+    }
+  ]
+}

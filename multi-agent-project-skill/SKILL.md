@@ -5,6 +5,8 @@ description: 当软件或产品项目可能被多个 AI Agent 并发编辑、可
 
 # 多 Agent 项目协作
 
+> 当前 Skill 版本：v1.0.0（唯一版本源 `package.json`，由 `scripts/validate.sh` 校验）。安装与升级见 `install-guide.md`，日常操作见 `operation-guide.md`，维护者手册见 `AGENTS.md`。
+
 ## 目标
 
 让一个项目可以安全地被多个 AI Agent 并行编辑，或在任意时刻由另一个 Agent 接手。仓库是持久的事实来源；聊天上下文是临时的。
@@ -515,3 +517,12 @@ Related tasks:
 ## 响应行为
 
 面向用户的更新保持简短。执行时，仅报告有意义的里程碑、发现的冲突、失败的检查、需要决策的事项与最终状态。除非被要求，否则不要倾倒内部簿记信息。
+
+## 相关文档
+
+- `references/WORKFLOW.md`：精简操作流程；`references/EXAMPLES.md`：并行/接管/注册/撞号/陈举示例。
+- `operation-guide.md`：面向使用者的日常操作（初始化/认领/交接/接管/陈旧/集成）。
+- `install-guide.md`：安装、升级与故障排查。
+- `AGENTS.md`：仓库维护者手册（修改流程、验证矩阵、版本发布）。
+- `CHANGELOG.md`：变更记录。
+- `.agents/adr/`：架构决策记录（why + 备选）。

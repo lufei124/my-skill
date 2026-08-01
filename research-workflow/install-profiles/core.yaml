@@ -1,0 +1,27 @@
+# 校验清单，不驱动安装。
+# scripts/install.sh / install.ps1 不解析本文件：安装范围是「整包软链」，
+# 安装脚本把整个 skill 目录链接到 ~/.claude/skills/ 或 ~/.codex/skills/。
+# 本文件由 scripts/validate.sh #7 消费，用于防止关键文件漏登记或路径写错。
+# 改这里不会改变安装行为。
+id: "core"
+description: "Install the research-workflow skill (grilling-aligned multi-agent deep-research workflow)."
+skills:
+  - name: "research-workflow"
+    source_files:
+      - "SKILL.md"
+      - "agents/"
+      - "references/"
+      - "scripts/create_research_skeleton.py"
+      - "scripts/grade_research_init.py"
+      - "scripts/aggregate_benchmark.py"
+      - "scripts/validate.sh"
+      - "scripts/install.sh"
+      - "scripts/install.ps1"
+      - "scripts/release.sh"
+      - "scripts/doc-impact-check.sh"
+      - "scripts/githooks/pre-push"
+      - "evals/evals.json"
+      - "operation-guide.md"
+      - "install-guide.md"
+      - "AGENTS.md"
+project_knowledge: null

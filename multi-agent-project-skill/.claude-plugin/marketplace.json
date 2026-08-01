@@ -1,0 +1,18 @@
+{
+  "name": "multi-agent-project-marketplace",
+  "owner": {
+    "name": "lufei124",
+    "email": "lfei7277@gmail.com"
+  },
+  "metadata": {
+    "description": "Self-hosted Claude Code plugin marketplace for the multi-agent-project-skill.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "multi-agent-project-skill",
+      "source": "./",
+      "description": "Initialize an AI-collaboration-ready project skeleton and define the protocol for multiple AI agents to safely edit, hand off, review and integrate work in parallel."
+    }
+  ]
+}

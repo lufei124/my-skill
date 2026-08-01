@@ -5,6 +5,8 @@ description: 当用户要求对项目中的某个子系统、模块或流程进�
 
 # 深度调研工作流（通用）
 
+> 当前 Skill 版本：v1.0.0（唯一版本源 package.json，由 scripts/validate.sh 校验）。安装与升级见 install-guide.md，日常操作见 operation-guide.md，维护者手册见 AGENTS.md。
+
 ## 何时使用
 
 本 skill 用于对项目中的单一研究对象（子系统、模块、流程、机制等）进行深度源码/资料调研与设计批判。它通过组织虚拟多角色团队，强制对齐目标后并行产出结构化文档。领域无关 —— 既适用于游戏/MUD 子系统，也适用于软件模块、SaaS 功能、数据流程等。
@@ -154,3 +156,12 @@ Skill 行为：
 3. 启动 Workflow，组织调研团队并行工作。
 4. 产出源码清单、机制抽象、三层 stories、现代设计批判、玩家心理分析、商业化评估、红队报告、最终汇总。
 5. 汇报产出结构，不自动 commit。
+
+## 相关文档
+
+- [README.md](README.md)：用户文档与快速开始。
+- [operation-guide.md](operation-guide.md)：日常操作（发起调研 / grilling / 骨架生成 / Workflow / 评分）。
+- [install-guide.md](install-guide.md)：安装、升级与故障排查。
+- [AGENTS.md](AGENTS.md)：维护者手册（如何安全修改本 skill 仓库）。
+- [CHANGELOG.md](CHANGELOG.md)：变更记录。
+- `.agents/adr/`：架构决策记录（为何如此设计）。

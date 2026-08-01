@@ -1,0 +1,6 @@
+interface:
+  display_name: "多 Agent 项目协作"
+  short_description: "初始化可被多 Agent 协作的项目骨架，并定义并行编辑/交接/审查/集成协议"
+  default_prompt: "Use $multi-agent-project-skill as the default entry when a project may be edited by multiple AI agents concurrently, may be handed off at any time, or needs persistent task state, file ownership, git isolation, review, integration or recovery without relying on chat history. Initialize the project skeleton (entry docs, long-term docs, reusable skills, .agent/ bookkeeping, stack baseline), then enforce read-state-before-edit, claim-before-edit, atomic task-id allocation via mkdir, worktree isolation, stale-lock TTL, and the no-destructive-git rules. Never erase, reset, reformat or overwrite other agents' unmerged work; never claim unrun tests passed; do not commit or push unless explicitly asked."
+policy:
+  allow_implicit_invocation: true

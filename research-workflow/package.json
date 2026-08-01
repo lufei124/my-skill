@@ -1,0 +1,10 @@
+{
+  "name": "research-workflow",
+  "version": "1.0.0",
+  "description": "Domain-agnostic deep-research skill: force grilling alignment, then orchestrate a multi-agent virtual team (parallel drafting, red-team adversarial, review-committee synthesis) to produce structured research docs under .scratch/research/NN-topic/.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "validate": "bash scripts/validate.sh"
+  }
+}

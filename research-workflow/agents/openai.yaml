@@ -1,0 +1,6 @@
+interface:
+  display_name: "深度调研工作流"
+  short_description: "强制 grilling 对齐后，组织多 Agent 虚拟团队并行产出结构化调研文档（含红队对抗与评审委员会汇总）"
+  default_prompt: "Use $research-workflow when the user asks to deeply research / fully analyze / source-archaeology / team-review a subsystem, module or flow in a project, or to extract its design ideas for rewrite. Trigger phrases include 调研 X / 全面分析 X / 组织团队评审 X / 对 X 做深度研究 / 帮我理解 X 子系统 / 对 X 做源码考古. First run grilling to align scope, goal, domain preset (game-mud / software-system / none), team, output structure, adversarial mechanism, execution mode and commit policy -- never skip grilling, never dive into source before alignment. Then create the numbered .scratch/research/NN-topic/ skeleton with the 6-layer dirs + brief via scripts/create_research_skeleton.py, orchestrate the three-phase Workflow (parallel drafting -> red-team adversarial -> review-committee synthesis), backfill any failed agents, and report. Conclusions must be backed by first-hand repo evidence; second-hand sources must be labeled. Default: do not auto commit."
+policy:
+  allow_implicit_invocation: true

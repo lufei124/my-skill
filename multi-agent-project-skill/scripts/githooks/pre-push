@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# pre-push gate for multi-agent-project-skill.
+# Runs the validator and an install.sh syntax check before allowing a push.
+# Enable with: git config core.hooksPath scripts/githooks
+#
+# This hook reads stdin (list of <local-ref> <local-sha> <remote-ref> <remote-sha>
+# lines) per `githooks(5)`; we discard it.
+set -euo pipefail
+
+repo="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+# Only act when the skill dir is the repo root or a subdir we live in.
+skill_dir="$(cd "$(dirname "$0")/.." && pwd)"
+
+echo "[pre-push] running validate.sh ..."
+bash "$skill_dir/scripts/validate.sh"
+
+echo "[pre-push] checking install.sh syntax ..."
+bash -n "$skill_dir/scripts/install.sh"
+
+echo "[pre-push] OK"
+exit 0

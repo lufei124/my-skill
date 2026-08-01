@@ -1,0 +1,13 @@
+{
+  "name": "research-workflow",
+  "version": "1.0.0",
+  "description": "Domain-agnostic deep-research skill: force grilling alignment, then orchestrate a multi-agent virtual team (parallel drafting, red-team adversarial, review-committee synthesis) to produce structured research docs under .scratch/research/NN-topic/.",
+  "author": {
+    "name": "lufei124",
+    "email": "lfei7277@gmail.com"
+  },
+  "license": "MIT",
+  "skills": [
+    "./"
+  ]
+}

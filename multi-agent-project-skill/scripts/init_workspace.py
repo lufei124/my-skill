@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import re
 import subprocess
+import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 from typing import Dict, Iterator, List, Tuple
@@ -115,6 +117,136 @@ def check_git(root: Path, init_git: bool) -> str:
     return "非 Git 仓库（建议 git init，或加 --init-git）"
 
 
+def generate(
+    root: Path, stack: str, force: bool, dry_run: bool
+) -> Tuple[List[Tuple[Path, str]], List[Path]]:
+    """执行模板遍历与写入，返回 (结果列表, 已写入文件列表)。"""
+    ctx = build_context(root, stack)
+    results: List[Tuple[Path, str]] = []
+    written_files: List[Path] = []
+    for src, rel in iter_templates(stack):
+        content = render(src.read_text(encoding="utf-8"), ctx)
+        dest = root / rel
+        action = write_file(dest, content, force, dry_run)
+        results.append((rel, action))
+        if action in ("已写入", "将写入"):
+            written_files.append(dest)
+    return results, written_files
+
+
+def self_test() -> int:
+    """回归自测：在临时目录跑三栈生成、占位符、幂等与不覆盖。退出 0=通过。"""
+    tmp = Path(tempfile.mkdtemp(prefix="ma-selftest-"))
+    failures: List[str] = []
+
+    def check(cond: bool, msg: str) -> None:
+        if cond:
+            print("  [OK] {0}".format(msg))
+        else:
+            print("  [FAIL] {0}".format(msg))
+            failures.append(msg)
+
+    try:
+        # 1. generic 结构完整 + 无占位符残留
+        g = tmp / "g"
+        g.mkdir()
+        results, written = generate(g, "generic", force=False, dry_run=False)
+        check((g / "AGENTS.md").is_file(), "generic: AGENTS.md 生成")
+        check((g / "docs" / "PROJECT_CONTEXT.md").is_file(), "generic: docs/PROJECT_CONTEXT.md 生成")
+        check((g / ".agent" / "AGENTS_REGISTRY.md").is_file(), "generic: .agent/AGENTS_REGISTRY.md 生成")
+        check((g / ".agent" / "task-ids" / ".gitkeep").is_file(), "generic: task-ids/.gitkeep 生成")
+        check((g / ".github" / "workflows" / "ci.yml").is_file(), "generic: ci.yml 生成")
+        check("待填写" in (g / "docs" / "TESTING.md").read_text(encoding="utf-8"), "generic: TESTING.md 含待填写")
+        leftover = []
+        for dest in written:
+            try:
+                text = dest.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            for m in PLACEHOLDER.finditer(text):
+                leftover.append("{0}: {{{{{1}}}}}".format(dest.relative_to(g), m.group(1)))
+        check(not leftover, "generic: 无占位符残留（{0}）".format(len(leftover)))
+
+        # 2. node 探测 + 渲染
+        n = tmp / "n"
+        n.mkdir()
+        (n / "package.json").write_text("{}", encoding="utf-8")
+        check(detect_stack(n) == "node", "node: detect_stack 探测正确")
+        generate(n, "node", force=False, dry_run=False)
+        ntesting = (n / "docs" / "TESTING.md").read_text(encoding="utf-8")
+        check("npm test" in ntesting, "node: TESTING.md 含 npm test")
+        nci = (n / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+        check("setup-node" in nci, "node: ci.yml 含 setup-node")
+        check("node_modules/" in (n / ".gitignore").read_text(encoding="utf-8"), "node: .gitignore 含 node_modules/")
+        n_gi = (n / ".gitignore").read_text(encoding="utf-8")
+        check(
+            re.search(r"^\s*\.agent/?\s*$", n_gi, re.MULTILINE) is None,
+            "node: .gitignore 不忽略 .agent/（行级判定，排除注释）",
+        )
+
+        # 3. python 探测
+        p = tmp / "p"
+        p.mkdir()
+        (p / "requirements.txt").write_text("", encoding="utf-8")
+        check(detect_stack(p) == "python", "python: detect_stack 探测正确")
+        generate(p, "python", force=False, dry_run=False)
+        ptesting = (p / "docs" / "TESTING.md").read_text(encoding="utf-8")
+        check("pytest" in ptesting, "python: TESTING.md 含 pytest")
+        check("pip install -r requirements.txt" in ptesting, "python: TESTING.md 含 pip install")
+        check("setup-python" in (p / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"), "python: ci.yml 含 setup-python")
+
+        # 4. --stack 覆盖探测
+        x = tmp / "x"
+        x.mkdir()
+        (x / "package.json").write_text("{}", encoding="utf-8")
+        generate(x, "python", force=False, dry_run=False)
+        check("pytest" in (x / "docs" / "TESTING.md").read_text(encoding="utf-8"), "--stack python 覆盖 node 探测")
+
+        # 5. 不覆盖语义
+        marker = "MARKER-{0}".format(g.name)
+        (n / "AGENTS.md").write_text(marker, encoding="utf-8")
+        generate(n, "node", force=False, dry_run=False)
+        check((n / "AGENTS.md").read_text(encoding="utf-8") == marker, "不覆盖已有文件（无 --force）")
+        generate(n, "node", force=True, dry_run=False)
+        check(marker not in (n / "AGENTS.md").read_text(encoding="utf-8"), "--force 覆盖已有文件")
+
+        # 6. dry-run 不落盘
+        d = tmp / "d"
+        d.mkdir()
+        _, _ = generate(d, "generic", force=False, dry_run=True)
+        check(not (d / "AGENTS.md").is_file(), "dry-run 不落盘")
+
+        # 7. 占位符集合一致：build_context 提供的变量与模板中 {{VAR}} 集合匹配
+        provided = set()
+        # 通过在临时 generic 项目上跑 dry-run 后扫描残留来间接校验（已在 #1 覆盖）；
+        # 这里再直接核对 build_context 的键覆盖模板用到的所有占位符。
+        for stack in STACKS:
+            t = tmp / ("ctx-" + stack)
+            t.mkdir()
+            ctx = build_context(t, stack)
+            provided |= set(ctx.keys())
+        used = set()
+        for base in (SKELETON,):
+            for src in base.rglob("*"):
+                if src.is_file():
+                    try:
+                        text = src.read_text(encoding="utf-8")
+                    except (OSError, UnicodeDecodeError):
+                        continue
+                    used |= {m.group(1) for m in PLACEHOLDER.finditer(text)}
+        check(used.issubset(provided), "占位符集合一致（模板用到的均由 build_context 提供）")
+
+    finally:
+        import shutil
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    if failures:
+        print("self-test: {0} 项失败".format(len(failures)))
+        return 1
+    print("self-test: 全部通过")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project_root", nargs="?", default=".")
@@ -127,7 +259,11 @@ def main() -> int:
         help="指定技术栈，默认 auto（自动探测）",
     )
     parser.add_argument("--init-git", action="store_true", help="非 Git 仓库时执行 git init")
+    parser.add_argument("--self-test", action="store_true", help="跑回归自测后退出（不写目标项目）")
     args = parser.parse_args()
+
+    if args.self_test:
+        return self_test()
 
     root = Path(args.project_root).expanduser().resolve()
     created_root = False
@@ -138,7 +274,6 @@ def main() -> int:
         parser.error("目标路径不是目录：{0}".format(root))
 
     stack = args.stack if args.stack != "auto" else detect_stack(root)
-    ctx = build_context(root, stack)
 
     if not SKELETON.exists():
         parser.error("未找到 assets/skeleton/，请确认 skill 安装完整：{0}".format(SKELETON))
@@ -151,15 +286,7 @@ def main() -> int:
     print("Git：{0}".format(git_status))
     print("已在 {0} 初始化多 Agent 项目骨架：".format(root))
 
-    results: List[Tuple[Path, str]] = []
-    written_files: List[Path] = []
-    for src, rel in iter_templates(stack):
-        content = render(src.read_text(encoding="utf-8"), ctx)
-        dest = root / rel
-        action = write_file(dest, content, args.force, args.dry_run)
-        results.append((rel, action))
-        if action in ("已写入", "将写入"):
-            written_files.append(dest)
+    results, written_files = generate(root, stack, args.force, args.dry_run)
 
     written_count = sum(1 for _, a in results if a in ("已写入", "将写入"))
     kept_count = sum(1 for _, a in results if a in ("保留", "将保留"))

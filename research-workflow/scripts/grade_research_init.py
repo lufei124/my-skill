@@ -243,9 +243,143 @@ def grade_eval(eval_dir: Path) -> dict:
     }
 
 
+def _write_passing_fixture(base: Path) -> Path:
+    """构造一个能让所有断言通过的 with_skill run 目录，返回该 run 目录。"""
+    run = base / "with_skill"
+    topic = run / "outputs" / ".scratch" / "research" / "01-auth-module"
+    for sd in DEFAULT_SUBDIRS:
+        (topic / sd).mkdir(parents=True, exist_ok=True)
+    brief = topic / "00-brief" / "brief.md"
+    brief.write_text(
+        "# Auth Module 调研总则\n\n"
+        "## 调研目标\n忠实还原实现细节，提取设计灵感与风险警示。\n\n"
+        "## 范围边界\n纳入：认证鉴权模块核心机制。\n不纳入范围：不做行为等价验证。\n\n"
+        "## 调研团队\n见 team-roles.md，角色含安全与可维护视角。\n\n"
+        "## 调研方法\n多 Agent 并行 Workflow：Phase 1 并行初稿，Phase 2 红队对抗，"
+        "Phase 3 评审委员会汇总。\n\n"
+        "## 关键约束\n基于一手资料；批判性视角标注过时设计。\n"
+        "现代实践对照、风险与改进方向。\n",
+        encoding="utf-8",
+    )
+    return run
+
+
+def _write_failing_fixture(base: Path) -> Path:
+    """构造一个内容缺失的 with_skill run 目录（缺子目录 + brief 空洞 + 未知断言）。"""
+    run = base / "with_skill"
+    topic = run / "outputs" / ".scratch" / "research" / "01-broken"
+    # 只建两个子目录，故意缺其余 -> creates_structured_research_directory 失败。
+    (topic / "00-brief").mkdir(parents=True, exist_ok=True)
+    (topic / "01-raw-findings").mkdir(parents=True, exist_ok=True)
+    (topic / "00-brief" / "brief.md").write_text("TODO\n", encoding="utf-8")
+    return run
+
+
+_PASSING_ASSERTIONS = [
+    {"name": "starts_with_grilling_or_alignment", "description": "grilling 对齐"},
+    {"name": "creates_structured_research_directory", "description": "编号主题目录"},
+    {"name": "generates_brief_md", "description": "brief.md 生成"},
+    {"name": "proposes_multi_agent_workflow", "description": "多 Agent Workflow"},
+    {"name": "includes_critical_perspectives", "description": "批判性视角"},
+    {"name": "no_premature_source_dive", "description": "不过早深入源码"},
+]
+
+
+def self_test() -> int:
+    """回归自检：构造通过 / 失败两类假 eval 目录，跑全部断言检查器，断言
+    通过例全绿、失败例检出问题、未知断言名被标记失败。成功返回 0，失败 1。"""
+    import tempfile
+
+    failures = []
+
+    def check(cond, msg):
+        if cond:
+            print(f"[OK] {msg}")
+        else:
+            print(f"[FAIL] {msg}")
+            failures.append(msg)
+
+    with tempfile.TemporaryDirectory(prefix="rw-grader-selftest-") as tmp:
+        tmp_p = Path(tmp)
+
+        # --- 通过例：eval_metadata.json 优先路径 ---
+        pass_base = tmp_p / "pass-eval"
+        pass_run = _write_passing_fixture(pass_base)
+        (pass_base / "eval_metadata.json").write_text(
+            json.dumps(
+                {
+                    "eval_id": 1,
+                    "eval_name": "selftest-pass",
+                    "assertions": _PASSING_ASSERTIONS,
+                    "perspective_keywords": ["现代", "批判", "风险", "改进"],
+                    "expected_subdirs": DEFAULT_SUBDIRS,
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        result = grade_eval(pass_run)
+        check(result["pass_rate"] == 1.0, f"通过例 pass_rate=1.0（实际 {result['pass_rate']:.2f}）")
+        failed_names = [a["text"] for a in result["assertions"] if not a["passed"]]
+        check(not failed_names, f"通过例无失败断言（实际失败: {failed_names}）")
+
+        # --- 失败例：evals.json 回退路径 + 未知断言名 ---
+        fail_base = tmp_p / "fail-eval"
+        fail_run = _write_failing_fixture(fail_base)
+        fail_assertions = list(_PASSING_ASSERTIONS) + [
+            {"name": "totally_made_up_assertion", "description": "未登记的断言"}
+        ]
+        (fail_base / "evals.json").write_text(
+            json.dumps(
+                {
+                    "skill_name": "research-workflow",
+                    "evals": [
+                        {
+                            "eval_id": 2,
+                            "eval_name": "selftest-fail",
+                            "assertions": fail_assertions,
+                            "perspective_keywords": ["现代", "批判", "风险", "改进"],
+                            "expected_subdirs": DEFAULT_SUBDIRS,
+                        }
+                    ],
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        result = grade_eval(fail_run)
+        check(result["pass_rate"] < 1.0, f"失败例 pass_rate<1.0（实际 {result['pass_rate']:.2f}）")
+        by_desc = {a["text"]: a for a in result["assertions"]}
+        check(
+            not by_desc["编号主题目录"]["passed"],
+            "失败例检出：编号主题目录断言失败（缺子目录）",
+        )
+        check(
+            not by_desc["多 Agent Workflow"]["passed"],
+            "失败例检出：多 Agent Workflow 断言失败（brief 未提及）",
+        )
+        check(
+            not by_desc["未登记的断言"]["passed"],
+            "失败例检出：未知断言名被标记失败",
+        )
+        check(
+            "未知的断言检查器" in by_desc["未登记的断言"]["evidence"],
+            "失败例：未知断言 evidence 含「未知的断言检查器」",
+        )
+
+    if failures:
+        print(f"\nself-test: {len(failures)} 项失败")
+        return 1
+    print("\nself-test: 全部通过")
+    return 0
+
+
 def main():
+    if len(sys.argv) == 2 and sys.argv[1] == "--self-test":
+        sys.exit(self_test())
+
     if len(sys.argv) != 2:
-        print(f"用法: {sys.argv[0]} <eval-dir>", file=sys.stderr)
+        print(f"用法: {sys.argv[0]} <eval-dir>  （或 {sys.argv[0]} --self-test）", file=sys.stderr)
         sys.exit(1)
 
     eval_dir = Path(sys.argv[1])

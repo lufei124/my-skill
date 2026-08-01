@@ -13,6 +13,7 @@
 import argparse
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -160,9 +161,77 @@ def create_skeleton(topic: str, root: Path, preset: str) -> Path:
     return topic_dir
 
 
+def self_test() -> int:
+    """回归自检：在临时目录为每个 preset 生成骨架，断言 6 层 + brief、preset
+    增量注入、标题派生、序号递增、无残留占位符。成功返回 0，失败返回 1。"""
+    failures = []
+
+    def check(cond, msg):
+        if cond:
+            print(f"[OK] {msg}")
+        else:
+            print(f"[FAIL] {msg}")
+            failures.append(msg)
+
+    # 各预设 brief 增量里独有的内容短语（none 不得出现任何一个）。
+    preset_markers = {
+        "game-mud": "现代玩法设计",
+        "software-system": "现代工程实践对照",
+    }
+    unformatted = ["{topic_title}", "{topic_dir}", "{preset_increment}"]
+    key_sections = ["调研目标", "范围边界", "调研团队", "调研方法", "输出目录结构", "关键约束"]
+
+    with tempfile.TemporaryDirectory(prefix="rw-skeleton-selftest-") as tmp:
+        root = Path(tmp) / "research"
+
+        # 1. 每个 preset：6 层 + brief + 无残留占位符 + preset 注入 + 章节齐全。
+        for preset in PRESETS:
+            topic = f"topic-{preset}"
+            topic_dir = create_skeleton(topic, root, preset)
+            for sd in PRESETS[preset]["subdirs"]:
+                check((topic_dir / sd).is_dir(), f"{preset}: 子目录 {sd} 生成")
+            brief = topic_dir / "00-brief" / "brief.md"
+            check(brief.is_file(), f"{preset}: brief.md 生成")
+            content = brief.read_text(encoding="utf-8") if brief.is_file() else ""
+            check(not any(f in content for f in unformatted), f"{preset}: brief 无残留占位符")
+            check("警告：预设增量片段缺失" not in content, f"{preset}: 无预设片段缺失警告")
+            check(to_title(topic) in content, f"{preset}: 标题由 topic 派生（{to_title(topic)}）")
+            if preset == "none":
+                for m in preset_markers.values():
+                    check(m not in content, f"none: 不注入预设增量（无 {m}）")
+            else:
+                check(preset_markers[preset] in content, f"{preset}: 注入了 brief 增量（{preset_markers[preset]}）")
+            for sec in key_sections:
+                check(sec in content, f"{preset}: brief 含章节 {sec}")
+
+        # 2. 序号递增：首个 01-、第二个 02-、第三个 03-（按 PRESETS 插入序）。
+        dirs = sorted(d.name for d in root.iterdir() if d.is_dir())
+        check(len(dirs) == len(PRESETS), f"生成主题目录数 = preset 数（{len(dirs)}）")
+        for i, name in enumerate(dirs, start=1):
+            check(name.startswith(f"{i:02d}-"), f"序号递增：第 {i} 个为 {i:02d}-（实际 {name}）")
+
+        # 3. find_next_index 反映已有目录数。
+        check(find_next_index(root) == len(PRESETS) + 1, "find_next_index 反映已有目录数")
+
+        # 4. --root 覆盖已由自定义 root 验证；同 topic 名再创建得到下一序号（不覆盖）。
+        again = create_skeleton("topic-none", root, "none")
+        check(again.name.startswith(f"{len(PRESETS)+1:02d}-"), "同 topic 名再创建取下一序号（不覆盖既有目录）")
+
+    if failures:
+        print(f"\nself-test: {len(failures)} 项失败")
+        return 1
+    print("\nself-test: 全部通过")
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser(description="创建调研目录骨架（通用版）")
-    parser.add_argument("topic", help="主题名，例如 auth-module / combat-system")
+    parser.add_argument(
+        "topic",
+        nargs="?",
+        default=None,
+        help="主题名，例如 auth-module / combat-system（--self-test 时可省略）",
+    )
     parser.add_argument(
         "--preset",
         default="none",
@@ -175,7 +244,18 @@ def main():
         default=DEFAULT_ROOT,
         help=f"研究根目录，默认 {DEFAULT_ROOT}",
     )
+    parser.add_argument(
+        "--self-test",
+        action="store_true",
+        help="运行回归自检（在临时目录为每个 preset 生成骨架并断言），不创建真实目录",
+    )
     args = parser.parse_args()
+
+    if args.self_test:
+        sys.exit(self_test())
+
+    if args.topic is None:
+        parser.error("topic 是必需的（除非用 --self-test）")
 
     topic = args.topic.strip().lower().replace(" ", "-")
     try:
