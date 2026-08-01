@@ -1,6 +1,6 @@
 ---
-name: multi-agent-project-coordination
-description: 当软件或产品项目可能被多个 AI Agent 并发编辑、可能在任意时刻被交接、或需要不依赖聊天记录即可持久化的任务状态、文件归属、Git 隔离、审查、集成与恢复时使用本 skill。适用于多 Agent 协作、Agent 接管、并行开发、任务交接、共享仓库、worktree 使用、文件冲突、工作中断或跨 Agent 审查等场景。
+name: multi-agent-project-skill
+description: 当软件或产品项目可能被多个 AI Agent 并发编辑、可能在任意时刻被交接、或需要不依赖聊天记录即可持久化的任务状态、文件归属、Git 隔离、审查、集成与恢复时使用本 skill。也用于初始化一个可被 AI 协作开发的项目骨架（入口文档、长期文档、可复用 skills、协作簿记、技术栈基线）。适用于多 Agent 协作、Agent 接管、并行开发、任务交接、共享仓库、worktree 使用、文件冲突、工作中断、跨 Agent 审查或新项目初始化等场景。
 ---
 
 # 多 Agent 项目协作
@@ -30,27 +30,45 @@ git clean -fd
 git push --force
 ```
 
-## 必需的项目状态
+## 项目骨架
 
-在项目根目录使用 `.agent/` 目录：
+一个可被多个 Agent 安全协作的项目，按以下分层组织（仓库是持久的事实来源；聊天上下文是临时的）：
 
 ```text
-.agent/
-├── PROJECT_STATE.md
-├── TASK_BOARD.md
-├── FILE_LOCKS.md
-├── TASK_HANDOFF.md
-├── decisions/
-└── handoffs/
+<project>/
+├── AGENTS.md                 # 统一入口（所有 AI 平台共同入口，平台文件只链接不复制规则）
+├── CLAUDE.md                 # 极简指针，指向 AGENTS.md
+├── README.md
+├── .gitignore                # 按技术栈生成
+├── docs/                     # 长期文档层
+│   ├── PROJECT_CONTEXT.md    # 问题/用户/流程/阶段/约束/不做
+│   ├── ARCHITECTURE.md       # 模块/数据流/依赖边界
+│   ├── DEVELOPMENT_RULES.md  # 强制/推荐/例外 + 代码-文档同步门禁 + 任务规模分级
+│   ├── TESTING.md            # 测试策略与命令
+│   ├── DECISIONS.md          # D-XXX 决策记录
+│   └── GLOSSARY.md           # 术语表
+├── skills/                   # 可复用方法层（九段式 skill）
+├── .agent/                   # 多 Agent 协作簿记层（本 skill 的差异化核心）
+│   ├── PROJECT_STATE.md
+│   ├── TASK_BOARD.md
+│   ├── FILE_LOCKS.md
+│   ├── TASK_HANDOFF.md
+│   ├── AGENTS_REGISTRY.md    # Agent 注册表
+│   ├── decisions/            # ADR
+│   ├── handoffs/             # 归档的交接记录
+│   └── task-ids/             # 任务 ID 原子占位目录
+└── .github/workflows/ci.yml  # 按技术栈生成
 ```
 
-若尚不存在，运行：
+若骨架尚不存在，运行初始化器：
 
 ```bash
 python <skill-path>/scripts/init_workspace.py <project-root>
 ```
 
-初始化器不得覆盖已有文件，除非被明确要求。
+初始化器从 `assets/`（单一模板真相源）读取模板，按技术栈探测结果渲染占位符并写入。技术栈探测：`package.json` -> node；`pyproject.toml` / `requirements.txt` -> python；否则 generic（生成占位骨架，由首个 Agent 补齐命令）。常用选项：`--dry-run`（预览不落盘）、`--stack {node,python,generic}`（覆盖探测）、`--force`（覆盖已有文件，慎用）、`--init-git`（非仓库时执行 `git init`）。
+
+初始化器不得覆盖已有文件，除非被 `--force` 明确要求。模板的唯一真相源是 `assets/`，修改模板应直接改 `assets/` 下的文件，不要改脚本内嵌字符串（脚本不含任何内嵌模板）。
 
 ## 运行模式
 
@@ -65,19 +83,35 @@ python <skill-path>/scripts/init_workspace.py <project-root>
 - **审查（Review）**：以对抗心态检查，不默认实现是正确的。
 - **集成（Integrate）**：按依赖顺序合并并行工作，解决意图冲突，而不只是文本冲突。
 
+### 初始化流程（Initialize）
+
+初始化一个新项目或为已有项目补齐骨架时：
+
+1. **探测技术栈**：检视目标目录是否存在 `package.json` / `pyproject.toml` / `requirements.txt`；不确定时用 `--dry-run` 先预览。
+2. **运行初始化器**：`python <skill-path>/scripts/init_workspace.py <project-root>`。已有文件默认保留；若目标已有 `AGENTS.md` / `CLAUDE.md`，保留并检查是否指向骨架文档，必要时建议合并而非覆盖。
+3. **检视生成物**：确认入口层（AGENTS.md/CLAUDE.md/README.md）、docs/、skills/、`.agent/`、技术栈文件（`.gitignore` + `ci.yml`）均已就位。
+4. **填写项目上下文**：补齐 `docs/PROJECT_CONTEXT.md` 的最小节（解决的问题 / 目标用户 / 技术栈），并把 `AGENTS.md` 的技术栈段与命令段补全。
+5. **登记 Agent 身份**：在 `.agent/AGENTS_REGISTRY.md` 登记首个 Agent；若由你主导，在 `TASK_BOARD.md` 顶部 `Coordinator:` 行声明。
+6. **创建首个任务**：若技术栈为 generic 回退，首个任务默认是「补齐 `docs/TESTING.md` 与 `AGENTS.md` 的命令段」；否则首个任务由用户目标决定。按「任务 ID 原子分配」取号。
+7. **Git**：若非仓库，建议 `git init`（或加 `--init-git`）；`.agent/` 须纳入版本控制。
+
 ## 开工流程
 
 编辑之前：
 
 1. 如存在则读取：
-   - `AGENTS.md`
-   - `PROJECT_CONTEXT.md`
+   - `AGENTS.md`（统一入口）
+   - `docs/PROJECT_CONTEXT.md`
+   - `docs/ARCHITECTURE.md`
+   - `docs/DEVELOPMENT_RULES.md`
    - `.agent/PROJECT_STATE.md`
    - `.agent/TASK_BOARD.md`
    - `.agent/FILE_LOCKS.md`
+   - `.agent/AGENTS_REGISTRY.md`
    - `.agent/TASK_HANDOFF.md`
    - 相关的 `.agent/decisions/`
    - 相关的 `.agent/handoffs/`
+   - 与任务相关的 `docs/`（如 TESTING.md、DECISIONS.md、GLOSSARY.md）和 `skills/`
 2. 运行：
 
 ```bash
@@ -101,6 +135,14 @@ Acceptance criteria:
 ```
 
 4. 若存在无法解释的未提交改动，予以保留。不得清理或覆盖。
+
+## Agent 注册与协调者
+
+- 首次认领任务前，必须在 `.agent/AGENTS_REGISTRY.md` 登记唯一身份（Agent ID / 平台 / 角色 / 首次登记 / 最近活跃）。同一平台多会话用序号后缀区分，如 `claude-20260801-01`。
+- 角色词汇：`coordinator`（协调者）/ `implementer`（实施者）/ `reviewer`（审查者）/ `integrator`（集成者）。
+- 每次写检查点或更新状态时刷新「最近活跃」；超过 4 小时未活跃可被提请检视（见陈旧判定）。
+- 协调者由用户指定，或首个完成初始化的 Agent 自荐，并在 `.agent/TASK_BOARD.md` 顶部 `Coordinator:` 行声明。
+- 协调者职责：骨架初始化、撞号仲裁、STALE 最终判定、集成执行。提交/推送批准权仍在用户，不因协调者角色而转移。
 
 ## 任务认领协议
 
@@ -142,6 +184,18 @@ ABANDONED
 - 记录预期会改动的确切文件或目录。
 - 当工作能干净拆分时，优先拆成独立任务。
 
+### 任务 ID 原子分配
+
+多个 Agent 并发认领时，靠文件系统原子操作避免 TASK-NNN 撞号：
+
+1. 读取 `.agent/TASK_BOARD.md`，取已用最大编号 N。
+2. 候选 ID = `TASK-(N+1)`，执行 `mkdir .agent/task-ids/TASK-(N+1)`（POSIX `mkdir` 是原子的）。
+3. 若目录已存在（撞号），编号 +1 重试，直到 `mkdir` 成功。
+4. 占位成功后，立即在 `TASK_BOARD.md` 写入完整任务行（含 Owner、Status、Scope），再开始动工。
+5. 占位目录 `.agent/task-ids/TASK-NNN` 永不删除，作为已用编号的持久记录。
+
+撞号时，后到者不得覆盖先到者已写入的看板行；后到者换用下一可用编号并在交接记录中说明。
+
 ## 并行工作协议
 
 多个 Agent 同时工作时：
@@ -169,9 +223,41 @@ State: ACTIVE | RELEASED | STALE | TAKEOVER_PENDING
 6. 绝不靠盲目选取整版本来解决冲突。
 7. 并行期间不做全仓库级别的格式化，除非这是被显式隔离出来的任务。
 
+### worktree 操作约定
+
+```bash
+# 在主工作区为任务创建隔离 worktree（放在主仓库的兄弟目录，不嵌套）：
+git worktree add ../<repo>-task-042 -b agent/<agent-id>/TASK-042-<slug>
+cd ../<repo>-task-042
+# ……工作……
+# 完成或移交后清理（保留分支）：
+git worktree remove ../<repo>-task-042
+```
+
+约定：worktree 一律放在主仓库的兄弟目录，命名 `<repo>-task-<NNN>`；分支命名 `agent/<agent-id>/TASK-<NNN>-<slug>`。worktree 不是协作状态的替代--`.agent/` 簿记仍须更新。
+
+### `.agent/` 的 Git 策略
+
+`.agent/` 是跨 Agent 共享的事实来源，须提交到主分支（不要加入 `.gitignore`）。
+
+- 簿记文件设计为追加友好：`TASK_BOARD.md`、`FILE_LOCKS.md` 追加行；`handoffs/` 追加归档文件；`task-ids/` 追加占位目录。
+- 使用 worktree 时：代码改动在 worktree 内进行；`.agent/` 的簿记更新基于最新主分支进行，或随代码合并一并合回主分支。避免两个分支同时编辑 `TASK_BOARD.md` 的同一区域。
+- 冲突处理：追加型文件保留双方行后人工去重；`TASK_HANDOFF.md` 冲突以最新「更新时间」为准，并合并未完成的待办事项。
+- 未经用户或协调 Agent 授权，不 push `.agent/` 或任何分支。
+
 ## 陈旧锁与接管协议
 
 仅当工作明显被废弃、原 Agent 不可达、或协调 Agent/用户授权接管时，才可将一个锁视为陈旧。
+
+### 陈旧判定（TTL）
+
+ACTIVE 锁须随每次检查点刷新 `Last updated`；连续工作超过 60 分钟未写检查点也应刷新。`Last updated` 距今超过 4 小时的锁可被任何 Agent 提请检视，但标记 `STALE` 仍须满足以下三者之一：
+
+- 原分支无进行中迹象（无提交、无检查点更新）；
+- 原 Agent 在 `.agent/AGENTS_REGISTRY.md` 标记为不可达；
+- 协调者或用户授权接管。
+
+TTL 只是触发检视的信号，**不自动释放锁**--自动释放会破坏「永不擦除他人成果」原则。
 
 接管之前：
 
@@ -187,6 +273,7 @@ State observed at takeover:
 Uncommitted changes preserved:
 Verification performed:
 ```
+
 
 4. 从已校验的状态继续，而不是重做已完成的工作。
 
@@ -275,6 +362,12 @@ Status:
 
 ## Changed files
 - path: 改了什么以及为什么
+
+## Documentation updated
+- 路径：更新了什么；或「无」
+
+## Documentation not updated (and why)
+- 路径：理由；或「无」
 
 ## Current position
 - 工作停止的确切位置

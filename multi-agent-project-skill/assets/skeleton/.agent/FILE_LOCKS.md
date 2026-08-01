@@ -1,0 +1,31 @@
+# 文件锁
+
+锁是建议性的协调记录。并行 Agent 仍应使用独立的 Git 分支或 worktree。
+
+| Path or glob | Task ID | Owner agent | Branch/worktree | 原因 | 获取时间 | 最后更新 | State |
+|---|---|---|---|---|---|---|---|
+
+合法状态：`ACTIVE`、`RELEASED`、`STALE`、`TAKEOVER_PENDING`。
+
+## 心跳与陈旧判定
+
+ACTIVE 锁须随每次检查点刷新 `最后更新`；连续工作超过 60 分钟未写检查点也应刷新。
+
+`最后更新` 距今超过 4 小时的锁可被任何 Agent提请检视，但标记 `STALE` 仍须满足以下三者之一：
+
+- 原分支无进行中迹象（无提交、无检查点更新）；
+- 原 Agent 在 `.agent/AGENTS_REGISTRY.md` 标记为不可达；
+- 协调者或用户授权接管。
+
+TTL 不自动释放锁--自动释放会破坏「永不擦除他人成果」原则。
+
+## 接管历史模板
+
+```text
+Previous owner:
+New owner:
+Takeover reason:
+State observed at takeover:
+Uncommitted changes preserved:
+Verification performed:
+```

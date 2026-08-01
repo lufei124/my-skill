@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 有 requirements.txt 用 pip install -r；若是 pyproject 项目改为 pip install -e .
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+      - name: 测试
+        run: pytest

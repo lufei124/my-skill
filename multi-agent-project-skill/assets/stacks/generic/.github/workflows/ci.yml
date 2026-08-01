@@ -1,0 +1,17 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 待填写
+        run: |
+          echo "请按技术栈填充 CI 步骤（安装依赖、测试、构建、检查）。"
+          echo "命令参考见 docs/TESTING.md 与 AGENTS.md。"
+          exit 1
