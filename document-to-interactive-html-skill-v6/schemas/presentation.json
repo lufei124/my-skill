@@ -1,0 +1,13 @@
+{
+  "presentation": {
+    "framework": "SCQA|Pyramid|StoryArc|Roadmap",
+    "mode": "hybrid|reveal|report",
+    "pages": [
+      {
+        "type": "hero",
+        "message": "string",
+        "visual": "component"
+      }
+    ]
+  }
+}
