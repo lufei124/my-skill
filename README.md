@@ -11,6 +11,7 @@
 | [`multi-agent-project-skill`](multi-agent-project-skill) | 多 Agent 并行协作与交接协议，用仓库内 `.agent/` 目录持久化任务状态 |
 | [`research-workflow`](research-workflow) | 领域无关的深度调研工作流，多 Agent 虚拟团队产出结构化调研报告 |
 | [`mobile-game-product-forge`](mobile-game-product-forge) | 移动游戏产品需求工坊：端到端编排调研、原型、PRD、评审、校验与交付 |
+| [`game-production`](game-production) | 游戏制作总控，按项目进度推进玩法验证、可玩原型、试玩与引擎实现 |
 
 ### `multi-agent-project-skill`
 
