@@ -7,6 +7,7 @@
 | Skill | 一句话说明 |
 | --- | --- |
 | [`ai-short-film-workflow`](ai-short-film-workflow) | 从创意、故事和分镜到首尾帧、视频生成与后期复核的 AI 短片工作流 |
+| [`lieflat-less-ai-tone`](lieflat-less-ai-tone) | 中文成稿的写作痕迹检测、最小改写与复测。原样收录 [shiujan 的上游版本](https://github.com/larashero3-dotcom/lieflat-less-ai-tone/tree/53160078a04926d98de57a233549612d1b89bdc9)，按 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) 许可用于非商业用途。 |
 | [`multi-agent-project-skill`](multi-agent-project-skill) | 多 Agent 并行协作与交接协议，用仓库内 `.agent/` 目录持久化任务状态 |
 | [`research-workflow`](research-workflow) | 领域无关的深度调研工作流，多 Agent 虚拟团队产出结构化调研报告 |
 | [`mobile-game-product-forge`](mobile-game-product-forge) | 移动游戏产品需求工坊：端到端编排调研、原型、PRD、评审、校验与交付 |
