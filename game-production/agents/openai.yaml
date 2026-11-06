@@ -1,7 +1,7 @@
 interface:
   display_name: 游戏制作总控
-  short_description: 从已有策划案出发，按当前进度推进玩法验证、HTML界面、试玩和引擎实现
-  default_prompt: 使用 $game-production 读取当前项目，判断已完成阶段，按本轮目标交付可验证的制作结果。
+  short_description: 按项目进度澄清目标、设计玩法与长期体验，推进原型、试玩和引擎实现
+  default_prompt: 使用 $game-production 读取项目与已确认决定，判断当前阶段；关键目标不清时逐步追问，按需调用玩法设计、诊断或变更评审，推进并交付可验证的制作成果。
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg
 policy:

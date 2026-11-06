@@ -11,7 +11,7 @@
 | [`multi-agent-project-skill`](multi-agent-project-skill) | 多 Agent 并行协作与交接协议，用仓库内 `.agent/` 目录持久化任务状态 |
 | [`research-workflow`](research-workflow) | 领域无关的深度调研工作流，多 Agent 虚拟团队产出结构化调研报告 |
 | [`mobile-game-product-forge`](mobile-game-product-forge) | 移动游戏产品需求工坊：端到端编排调研、原型、PRD、评审、校验与交付 |
-| [`game-production`](game-production) | 游戏制作总控，按项目进度推进玩法验证、可玩原型、试玩与引擎实现 |
+| [`game-production`](game-production) | 游戏制作总控，含目标追问、核心玩法与长期体验两个子 Skill，以及模式库、实验模板和结构校验 |
 
 ### `multi-agent-project-skill`
 
@@ -51,6 +51,12 @@ claude plugin install mobile-game-product-forge@fairyland-forge
 无插件环境可改用本地脚本软链：`bash mobile-game-product-forge/scripts/install.sh --agent claude`（也支持 `codex` / `cursor`）。安装后在目标项目调用 `$setup-mobile-game-product-forge` 初始化，再用 `$mobile-game-product-forge` 发起正式需求。
 
 详见 [`mobile-game-product-forge/README.md`](mobile-game-product-forge/README.md) 与 [`mobile-game-product-forge/SKILL.md`](mobile-game-product-forge/SKILL.md)。
+
+### `game-production`
+
+在原有六阶段制作流程上，增加跨阶段的目标澄清与设计追问，以及核心玩法与长期体验设计（设计/诊断/变更评审）。13 种模式和专业方法作为按需参考，商业化、UI、技术与测试各守职责；不会要求所有项目添加签到、抽奖或广告。
+
+必须保留整个 `game-production/` 目录结构：总控按相对路径读取 `skills/`、`references/` 和 `templates/`，不能只复制顶层 `SKILL.md`。不要求宿主自动发现子 Skill，也没有强制的外部 Skill 依赖。安装、示例和检查方式见 [使用说明](game-production/README.md)。
 
 ## 使用方式
 
